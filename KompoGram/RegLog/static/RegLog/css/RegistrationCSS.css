@@ -1,0 +1,12 @@
+body{
+    display: flex;
+    justify-content: center;
+}
+.FormDiv{
+    height: 500px;
+    width: 500px;
+    margin-top: 250px;
+}
+text{
+    display: none;
+}

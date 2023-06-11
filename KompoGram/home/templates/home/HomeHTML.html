@@ -1,0 +1,30 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <h1>home</h1>
+    <a href="{% url 'logout' %}">logout</a>
+    <H1>Привіт! {{ username }}</H1>
+    <h1>Ваша почта - {{ email }}</h1>
+    {% for i in users %}
+        <h1>{{ i }}</h1>
+    {% endfor %}
+    <h1>Request</h1>
+    {% for r in friends %}
+        <a href="{% url 'accept' r.id %}">{{ r.from_user }}</a>
+    {% endfor %}
+    <h1>Friends</h1>
+<!--    {{ user.friends.all }}-->
+    {% for f in user.friends.all %}
+    <a href="{% url 'ChatId' f.username %}">{{ f }}</a>
+    {% endfor %}
+    <form action="{% url 'search_qqq' %}" method="POST">
+        {% csrf_token %}
+        <input type="search" placeholder="Пошук користувачів" name="searched">
+    </form>
+</body>
+</html>

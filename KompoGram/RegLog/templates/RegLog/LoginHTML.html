@@ -1,0 +1,26 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="{% static 'RegLog/css/RegistrationCSS.css' %}">
+</head>
+<body>
+    <form method="POST" action="">
+        {% csrf_token %}
+        <div class="FormDiv">
+            <div class="usernamediv">
+                <label for="username">Username</label>
+                <input type="text" placeholder="Username" name="username" id="username">
+            </div>
+            <div class="password1div">
+                <label for="password1">Password</label>
+                <input type="password" placeholder="Password" name="password1" id="password1">
+            </div>
+            <input type="submit" >
+            <a href="{% url 'registration' %}">I haven't account</a>
+        </div>
+    </form>
+</body>
+</html>
