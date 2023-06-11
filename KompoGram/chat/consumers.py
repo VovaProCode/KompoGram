@@ -22,27 +22,27 @@ class ChatConsumer(AsyncWebsocketConsumer):
         text_data_json = json.loads(text_data)
         message = text_data_json['message']
         user = self.scope['user'].username
-        to_user = self.get_to_user_from_url()  # Получаем имя пользователя из URL-адреса
+        to_user = self.get_to_user_from_url() 
 
         await self.channel_layer.group_send(
             self.room_group_name,
             {
                 'type': 'chat_message',
                 'user': user,
-                'to_user': to_user,  # Передаем имя пользователя в to_user
+                'to_user': to_user,
                 'message': message
             }
         )
 
     async def chat_message(self, event):
         user = event['user']
-        to_user = event['to_user']  # Получаем имя пользователя из event
+        to_user = event['to_user']
         message = event['message']
 
         await self.send(text_data=json.dumps({
             'type': 'chat',
             'user': user,
-            'to_user': to_user,  # Передаем имя пользователя в to_user
+            'to_user': to_user,
             'message': message
         }))
 
@@ -50,7 +50,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
         # Получаем имя пользователя из URL-адреса
         path = self.scope['path']
         parts = path.split('/')
-        username = parts[-1] if parts[-1] else parts[-2]  # Получаем последний непустой элемент из URL-адреса
+        username = parts[-1] if parts[-1] else parts[-2]
         print(username)
         print(path)
         return username
