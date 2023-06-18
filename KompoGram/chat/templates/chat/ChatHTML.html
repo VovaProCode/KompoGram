@@ -6,11 +6,23 @@
 </head>
 <body>
     <h1>Привіт! {{ user.username }} це чат!</h1>
-    <form id="form">
+    <form method="POST" action="" id="form">
+        {% csrf_token %}
         <input type="text" name="message">
     </form>
-    <div id="messages"></div>
-
+    <div id="messages">
+        {% for i in Otpravka %}
+            <div>
+                <p>від:{{ i.from_user }}: {{ i.message }}</p>
+            </div>
+        {% endfor %}
+        {% for m in Get %}
+            <div>
+                <p>від:{{ i.from_user }}: {{ m.message }}</p>
+            </div>
+        {% endfor %}
+    </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script type="text/javascript">
         let URL_USER1 = window.location.href;
         let parts = URL_USER1.split('/');
@@ -54,8 +66,26 @@
             chatSocket.send(JSON.stringify({
                 'message': message
             }))
-            form.reset()
         })
+    </script>
+    <script>
+        $(document).ready(function() {
+            $('#form').submit(function(event) {  // Припустимо, що у вас є форма з ідентифікатором form
+                event.preventDefault();  // Зупинка стандартної поведінки форми (перезавантаження сторінки)
+                var formData = $(this).serialize()
+                let URL_USER1 = window.location.href;
+                let parts = URL_USER1.split('/');
+                let usernameAjax = parts[parts.length - 1]
+                let form = document.getElementById('form')
+                urlAjax = '/chat/' + usernameAjax;
+                $.ajax({
+                    url: urlAjax,  // URL-адреса, на яку буде виконуватися запит
+                    type: 'POST',
+                    data: formData,  // Дані для надсилання на сервер
+                });
+                form.reset()
+            });
+        });
     </script>
 </body>
 </html>

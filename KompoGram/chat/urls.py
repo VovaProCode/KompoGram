@@ -3,5 +3,5 @@ from django.urls import path, include
 from . import views
 
 urlpatterns = [
-    path('<str:username>', views.ChatPage, name='ChatId')
+    path('<str:username>', views.ChatPage, name='ChatId'),
 ]

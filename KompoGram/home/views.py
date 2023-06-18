@@ -1,4 +1,3 @@
-from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
 from RegLog.models import FriendRequest, CustomUser
@@ -13,6 +12,8 @@ def HomePage(request):
         username = request.user.username
         email = request.user.email
         users = CustomUser.objects.exclude(username='admin')
-        friends = FriendRequest.objects.filter(to_user=request.user)
-        context = {"username": username, 'email': email,"users": users, 'friends': friends}
+        friends_requests = FriendRequest.objects.filter(to_user=request.user)
+        friends = request.user.friends.exclude(id=request.user.id)
+        context = {"username": username, 'email': email,"users": users,
+                   'friends_requests': friends_requests, 'friends': friends}
         return render(request, 'home/HomeHTML.html', context)

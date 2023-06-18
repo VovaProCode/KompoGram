@@ -51,6 +51,4 @@ class ChatConsumer(AsyncWebsocketConsumer):
         path = self.scope['path']
         parts = path.split('/')
         username = parts[-1] if parts[-1] else parts[-2]
-        print(username)
-        print(path)
         return username

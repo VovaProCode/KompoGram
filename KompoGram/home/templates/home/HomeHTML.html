@@ -14,13 +14,13 @@
         <h1>{{ i }}</h1>
     {% endfor %}
     <h1>Request</h1>
-    {% for r in friends %}
+    {% for r in friends_requests %}
         <a href="{% url 'accept' r.id %}">{{ r.from_user }}</a>
     {% endfor %}
     <h1>Friends</h1>
 <!--    {{ user.friends.all }}-->
-    {% for f in user.friends.all %}
-    <a href="{% url 'ChatId' f.username %}">{{ f }}</a>
+    {% for f in friends %}
+        <a href="{% url 'ChatId' f.username %}">{{ f }}</a>
     {% endfor %}
     <form action="{% url 'search_qqq' %}" method="POST">
         {% csrf_token %}
