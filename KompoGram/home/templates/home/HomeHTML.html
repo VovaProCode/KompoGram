@@ -20,7 +20,7 @@
     <h1>Friends</h1>
 <!--    {{ user.friends.all }}-->
     {% for f in friends %}
-        <a href="{% url 'ChatId' f.username %}">{{ f }}</a>
+        <a href="{% url 'ChatId' f.username user.username %}">{{ f }}</a>
     {% endfor %}
     <form action="{% url 'search_qqq' %}" method="POST">
         {% csrf_token %}

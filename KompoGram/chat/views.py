@@ -1,31 +1,37 @@
-import datetime
+import json
+from datetime import datetime
 
 from django.http import JsonResponse
-from django.shortcuts import render
+from django.shortcuts import render, redirect
+from django.utils.safestring import mark_safe
+
 # from RegLog.models import CustomUser
 from .models import Messages
 
 
 # Create your views here.
 
-def ChatPage(request, username):
-    from_user = request.user.username
-    to_user = request.path
-    to_user = to_user.split('/')
-    to_user = to_user[-1]
-    Otpravka = Messages.objects.filter(from_user=from_user, to_user=to_user)
-    Get = Messages.objects.filter(from_user=to_user, to_user=from_user)
-    context = {'Otpravka': Otpravka, 'Get': Get}
-    if request.method == 'POST' and request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest':
-        message = request.POST.get('message')
-        print(message)
-        print("asdfDSFJSDFJSDFJDSAFDSFDSSSSSSSSSSSSSSSSSSS")
-        from_user = request.user.username
-        to_user = request.path
-        print(to_user)
-        to_user = to_user.split('/')
-        to_user = to_user[-1]
-        print(to_user)
-        Message = Messages.objects.get_or_create(from_user=from_user, to_user=to_user, message=message, time=datetime.time)
-        return JsonResponse({'success': True})
+def ChatPage(request, user1, user2):
+    friends = request.user.friends.filter(username=user1)
+    if not friends.exists():
+        return redirect('home')
+    else:
+        current_time = datetime.now().time()
+        if user1 > user2:
+            user_more = user2 + '_' + user1
+        elif user2 > user1:
+            user_more = user1 + '_' + user2
+        chat_messages = Messages.objects.filter(chat=user_more).order_by("time")
+        context = {'All_Messages': chat_messages, 'room_name_json': mark_safe(json.dumps(user_more))}
+        if request.method == 'POST' and request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest':
+            message = request.POST.get('message')
+            from_user = request.user.username
+            Message = Messages.objects.get_or_create(chat=user_more, from_user=from_user, message=message, time=current_time)
     return render(request, 'chat/ChatHTML.html', context)
+
+def DeleteMessage(request):
+    if request.method == 'POST' and request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest':
+        delete_message = request.POST.get('message_id')
+        delete_message_bd = Messages.objects.get(id=delete_message)
+        delete_message_bd.delete()
+    return JsonResponse({'status': 'success'})

@@ -3,5 +3,6 @@ from django.urls import path, include
 from . import views
 
 urlpatterns = [
-    path('<str:username>', views.ChatPage, name='ChatId'),
+    path('<str:user1>-<str:user2>', views.ChatPage, name='ChatId'),
+    path('delete-message/', views.DeleteMessage, name='DeleteMessage')
 ]
