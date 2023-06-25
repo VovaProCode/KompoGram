@@ -43,6 +43,11 @@
 
                 messages.insertAdjacentHTML('beforeend', `<div>
                                     <p>від:${from_user}: ${data.message}</p>
+                                    <form action="" method="POST" class="delete_message">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="message_id" value="${data.id}">
+                                    <button type="submit">Delete</button>
+                                    </form>
                                 </div>`)
             }
         }

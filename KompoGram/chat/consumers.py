@@ -1,5 +1,6 @@
 import json
 from channels.generic.websocket import AsyncWebsocketConsumer
+from random import randint
 
 class ChatConsumer(AsyncWebsocketConsumer):
     async def connect(self):
@@ -23,7 +24,8 @@ class ChatConsumer(AsyncWebsocketConsumer):
         text_data_json = json.loads(text_data)
         message = text_data_json['message']
         user = self.scope['user'].username
-        to_user = self.get_to_user_from_url() 
+        to_user = self.get_to_user_from_url()
+        id = randint(1, 1000000) 
 
         await self.channel_layer.group_send(
             self.room_group_name,
@@ -31,7 +33,8 @@ class ChatConsumer(AsyncWebsocketConsumer):
                 'type': 'chat_message',
                 'user': user,
                 'to_user': to_user,
-                'message': message
+                'message': message,
+                'id': id
             }
         )
 
@@ -39,12 +42,14 @@ class ChatConsumer(AsyncWebsocketConsumer):
         user = event['user']
         to_user = event['to_user']
         message = event['message']
+        id = event['id']
 
         await self.send(text_data=json.dumps({
             'type': 'chat',
             'user': user,
             'to_user': to_user,
-            'message': message
+            'message': message,
+            'id': id
         }))
 
     def get_to_user_from_url(self):
