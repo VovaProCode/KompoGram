@@ -1,6 +1,8 @@
 import json
+
+from asgiref.sync import sync_to_async
 from channels.generic.websocket import AsyncWebsocketConsumer
-from random import randint
+from .models import Messages
 
 class ChatConsumer(AsyncWebsocketConsumer):
     async def connect(self):
@@ -25,7 +27,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
         message = text_data_json['message']
         user = self.scope['user'].username
         to_user = self.get_to_user_from_url()
-        id = randint(1, 1000000) 
+        id = await self.get_id_bd()
 
         await self.channel_layer.group_send(
             self.room_group_name,
@@ -58,3 +60,9 @@ class ChatConsumer(AsyncWebsocketConsumer):
         parts = path.split('/')
         username = parts[-1] if parts[-1] else parts[-2]
         return username
+
+    @sync_to_async
+    def get_id_bd(self):
+        id_message = Messages.objects.count()
+        count = id_message + 1
+        return count

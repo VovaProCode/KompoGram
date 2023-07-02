@@ -26,12 +26,16 @@ def ChatPage(request, user1, user2):
         if request.method == 'POST' and request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest':
             message = request.POST.get('message')
             from_user = request.user.username
-            Message = Messages.objects.get_or_create(chat=user_more, from_user=from_user, message=message, time=current_time)
+            all_messages = Messages.objects.count()
+            count = all_messages + 1
+            Message = Messages.objects.get_or_create(chat=user_more, from_user=from_user,
+                                                     message=message, time=current_time,
+                                                     id_message=count)
     return render(request, 'chat/ChatHTML.html', context)
 
 def DeleteMessage(request):
     if request.method == 'POST' and request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest':
         delete_message = request.POST.get('message_id')
-        delete_message_bd = Messages.objects.get(id=delete_message)
+        delete_message_bd = Messages.objects.get(id_message=delete_message)
         delete_message_bd.delete()
     return JsonResponse({'status': 'success'})
