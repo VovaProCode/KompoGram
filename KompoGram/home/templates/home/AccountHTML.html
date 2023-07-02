@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>Вітаємо в личному кабінеті!</h1>
+    <h1>Натисніть щоб поміняти:</h1>
+    <form action="" method="POST">
+        <a href="{% url 'change-name' %}">{{ user.username }}</a>
+        <input type="text" placeholder="Змінити імя" name="new_name">
+    </form>
+</body>
+</html>

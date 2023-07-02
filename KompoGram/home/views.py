@@ -17,3 +17,13 @@ def HomePage(request):
         context = {"username": username, 'email': email,"users": users,
                    'friends_requests': friends_requests, 'friends': friends}
         return render(request, 'home/HomeHTML.html', context)
+
+def AccountPage(request):
+    return render(request, 'home/AccountHTML.html')
+
+def ChangeName(request):
+    if request.method == 'POST':
+        new_name = request.POST.get('new_name')
+        this_user = request.user
+        this_user.username = new_name
+        this_user.save()

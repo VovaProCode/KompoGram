@@ -10,6 +10,7 @@
     <a href="{% url 'logout' %}">logout</a>
     <H1>Привіт! {{ username }}</H1>
     <h1>Ваша почта - {{ email }}</h1>
+    <a href="{% url 'account' %}">Кабінет користувача</a>
     {% for i in users %}
         <h1>{{ i }}</h1>
     {% endfor %}
@@ -20,7 +21,7 @@
     <h1>Friends</h1>
 <!--    {{ user.friends.all }}-->
     {% for f in friends %}
-        <a href="{% url 'ChatId' f.username user.username %}">{{ f }}</a>
+        <a href="{% url 'ChatId' f.id user.id %}">{{ f }}</a>
     {% endfor %}
     <form action="{% url 'search_qqq' %}" method="POST">
         {% csrf_token %}

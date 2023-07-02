@@ -25,7 +25,6 @@
     </div>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="{% static 'chat/js/AjaxMessage.js' %}" defer></script>
-    <script src="{% static 'chat/js/AjaxDelete.js' %}" defer></script>
     <script type="text/javascript">
         let URL_USER1 = window.location.href;
         let parts = URL_USER1.split('/');
@@ -64,5 +63,10 @@
             }))
         })
     </script>
+    <script>
+        all_forms = document.querySelectorAll('.delete_message')
+        all_forms.preventDefault()
+    </script>
+    <script src="{% static 'chat/js/AjaxDelete.js' %}" defer></script>
 </body>
 </html>

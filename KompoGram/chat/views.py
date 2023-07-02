@@ -7,30 +7,22 @@ from django.utils.safestring import mark_safe
 
 # from RegLog.models import CustomUser
 from .models import Messages
-
+from .selectors.chat import get_chat
 
 # Create your views here.
 
-def ChatPage(request, user1, user2):
-    friends = request.user.friends.filter(username=user1)
+def ChatPage(request, user1_id, user2_id):
+    friends = request.user.friends.filter(id=user1_id)
     if not friends.exists():
         return redirect('home')
     else:
         current_time = datetime.now().time()
-        if user1 > user2:
-            user_more = user2 + '_' + user1
-        elif user2 > user1:
-            user_more = user1 + '_' + user2
-        chat_messages = Messages.objects.filter(chat=user_more).order_by("time")
-        context = {'All_Messages': chat_messages, 'room_name_json': mark_safe(json.dumps(user_more))}
+        chat = get_chat(user1_id, user2_id)
+        chat_messages = Messages.objects.filter(chat=chat.id).order_by("time")
+        context = {'All_Messages': chat_messages, 'room_name_json': mark_safe(json.dumps(chat.get_name_room()))}
         if request.method == 'POST' and request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest':
             message = request.POST.get('message')
-            from_user = request.user.username
-            all_messages = Messages.objects.count()
-            count = all_messages + 1
-            Message = Messages.objects.get_or_create(chat=user_more, from_user=from_user,
-                                                     message=message, time=current_time,
-                                                     id_message=count)
+            Messages.objects.get_or_create(chat=chat, message=message, time=current_time)
     return render(request, 'chat/ChatHTML.html', context)
 
 def DeleteMessage(request):
