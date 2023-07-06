@@ -1,12 +1,14 @@
 from chat.models import Chat
-from django.contrib.auth import get_user_model
 
-def get_chat(first_user_id, second_user_id):
-    if first_user_id > second_user_id:
-        temp = first_user_id
-        first_user_id = second_user_id
-        second_user_id = temp
-    
-    user1 = get_user_model().objects.get(id=first_user_id)
-    user2 = get_user_model().objects.get(id=second_user_id)
-    return Chat.objects.get_or_create(firts_user=user1, second_user=user2)
+
+def get_chat(first_user, second_user):
+    if first_user.id > second_user.id:
+        temp = first_user
+        first_user = second_user
+        second_user = temp
+
+    # проблема була в тому, get_or_create повертає не одне значення, а 2.
+    # Перше - об'єкт, який був створений, а друге - чи був об'єкт створений (True або False)
+    # друге значення на не треба, тому повертаємо лише перше
+    chat, is_created = Chat.objects.get_or_create(firts_user=first_user, second_user=second_user)
+    return chat
