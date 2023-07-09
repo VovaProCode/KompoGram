@@ -28,6 +28,9 @@ class ChatConsumer(AsyncWebsocketConsumer):
         message = text_data_json['message']
         user = self.scope['user'].username
         to_user = self.get_to_user_from_url()
+        
+        create_message(chat, message)
+
         id = await self.get_id_bd()
 
         await self.channel_layer.group_send(

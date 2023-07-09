@@ -17,7 +17,7 @@
                 <p>від:{{ i.from_user }}: {{ i.message }}</p>
                 <form action="" method="POST" class="delete_message">
                     {% csrf_token %}
-                    <input type="hidden" name="message_id" value="{{ i.id_message }}">
+                    <input type="hidden" name="message_id" value="{{ i.id }}">
                     <button type="submit">Delete</button>
                 </form>
             </div>
@@ -59,6 +59,7 @@
             e.preventDefault()
             let message = e.target.message.value
             chatSocket.send(JSON.stringify({
+                '':
                 'message': message
             }))
         })

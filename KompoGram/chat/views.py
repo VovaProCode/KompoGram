@@ -8,7 +8,7 @@ from RegLog.serives.user import get_user_friend
 from .models import Messages
 from .selectors.chat import get_chat
 from .selectors.message import get_chat_messages
-from .services.message import create_message
+# from .services.message import create_message
 
 
 # щоб відкрити чат, нам достатньо передавати id друга, свій id ми і так взнаємо
@@ -25,9 +25,9 @@ def ChatPage(request, another_user_id):
         'room_name_json': mark_safe(json.dumps(chat.get_name_room()))
     }
 
-    if request.method == 'POST' and request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest':
-        message = request.POST.get('message')
-        create_message(chat, message)
+    # if request.method == 'POST' and request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest':
+    #     message = request.POST.get('message')
+    #     create_message(chat, message)
 
     return render(request, 'chat/ChatHTML.html', context)
 
@@ -35,6 +35,6 @@ def ChatPage(request, another_user_id):
 def DeleteMessage(request):
     if request.method == 'POST' and request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest':
         delete_message = request.POST.get('message_id')
-        delete_message_bd = Messages.objects.get(id_message=delete_message)
+        delete_message_bd = Messages.objects.get(id=delete_message)
         delete_message_bd.delete()
     return JsonResponse({'status': 'success'})
