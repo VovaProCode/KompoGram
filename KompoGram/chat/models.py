@@ -8,7 +8,7 @@ class Chat(models.Model):
     friends = models.ForeignKey(Friends, on_delete=models.CASCADE)
 
     def get_name_room(self):
-        return f'{self.firts_user.id}_{self.second_user.id}'
+        return f'{self.friends.first_user.id}_{self.friends.second_user.id}'
 
 
 class Messages(models.Model):

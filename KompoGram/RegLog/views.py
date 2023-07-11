@@ -3,6 +3,8 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from .models import CustomUser, FriendRequest
+from .serives.friends import add_friend
+
 
 # Create your views here.
 
@@ -63,7 +65,6 @@ def AcceptRequest(request, id):
     friends_request = FriendRequest.objects.get(id=id)
     user1 = request.user
     user2 = friends_request.from_user
-    user1.friends.add(user2)
-    user2.friends.add(user1)
+    add_friend(user1, user2)
     friends_request.delete()
     return redirect('home')

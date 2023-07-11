@@ -4,7 +4,8 @@ from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from django.utils.safestring import mark_safe
 
-from RegLog.serives.user import get_user_friend
+from RegLog.selectors.users import get_user_by_id
+from RegLog.serives.friends import get_user_friend
 from .models import Messages
 from .selectors.chat import get_chat
 from .selectors.message import get_chat_messages
@@ -14,12 +15,13 @@ from .selectors.message import get_chat_messages
 # щоб відкрити чат, нам достатньо передавати id друга, свій id ми і так взнаємо
 def ChatPage(request, another_user_id):
     user = request.user  # ось в request і так зберігається інфа про те, хто ми
-    friend = get_user_friend(user, another_user_id)
+    another_user = get_user_by_id(another_user_id)
+    friends = get_user_friend(user, another_user)
 
-    if not friend:
+    if not friends:
         return redirect('home')
 
-    chat = get_chat(user, friend)
+    chat = get_chat(friends)
     context = {
         'All_Messages': get_chat_messages(chat),
         'room_name_json': mark_safe(json.dumps(chat.get_name_room()))
