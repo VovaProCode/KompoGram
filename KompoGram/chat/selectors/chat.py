@@ -1,3 +1,5 @@
+from asgiref.sync import sync_to_async
+
 from chat.models import Chat
 
 
@@ -7,3 +9,6 @@ def get_chat(friends):
     # друге значення на не треба, тому повертаємо лише перше
     chat, is_created = Chat.objects.get_or_create(friends=friends)
     return chat
+
+async def get_chat_async(friends):
+    return await sync_to_async(get_chat, thread_sensitive=True)(friends)

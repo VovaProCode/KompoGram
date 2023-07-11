@@ -59,14 +59,9 @@
             e.preventDefault()
             let message = e.target.message.value
             chatSocket.send(JSON.stringify({
-                '':
                 'message': message
             }))
         })
-    </script>
-    <script>
-        all_forms = document.querySelectorAll('.delete_message')
-        all_forms.preventDefault()
     </script>
     <script src="{% static 'chat/js/AjaxDelete.js' %}" defer></script>
 </body>

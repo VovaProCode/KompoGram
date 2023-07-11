@@ -1,7 +1,6 @@
 // $(document).ready(function() {
 //     $('#form').submit(function(event) {
 //         event.preventDefault()
-//         console.log("НЕ ВБ перший")
 //         var formData = $(this).serialize()
 //         let URL_USER1 = window.location.href;
 //         let parts = URL_USER1.split('/');
