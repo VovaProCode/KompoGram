@@ -1,17 +1,11 @@
 $(document).ready(function() {
-    $('.delete_message').submit(function(event) {
-        event.preventDefault();
+    $('.message__delete').on("click", function(event) {
+        console.log('+')
         var message_obj = this.parentNode;
-        var DataForm = $(this).serialize();
-        let form = $(this);
-        let urlAjax = 'delete-message/';
-        $.ajax({
-            url: urlAjax,
-            type: 'POST',
-            data: DataForm,
-            success: function(data) {
-                message_obj.remove();
-            }
-        });
+        chatSocket.send(JSON.stringify({
+            'message_id': message_obj.dataset.id,
+            'type': 'delete_message'
+        }))
+        message_obj.remove();
     });
 });

@@ -13,18 +13,15 @@
     </form>
     <div id="messages">
         {% for i in All_Messages %}
-            <div>
+            <div class="message" data-id="{{ i.id }}">
                 <p>від:{{ i.from_user }}: {{ i.message }}</p>
-                <form action="" method="POST" class="delete_message">
-                    {% csrf_token %}
-                    <input type="hidden" name="message_id" value="{{ i.id }}">
-                    <button type="submit">Delete</button>
-                </form>
+                <button class="message__delete">Delete</button>
             </div>
         {% endfor %}
     </div>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="{% static 'chat/js/AjaxMessage.js' %}" defer></script>
+    <script src="{% static 'chat/js/AjaxDelete.js' %}" defer></script>
     <script type="text/javascript">
         let URL_USER1 = window.location.href;
         let parts = URL_USER1.split('/');
@@ -43,7 +40,7 @@
             if (data.type === 'chat') {
                 let messages = document.getElementById('messages')
 
-                messages.insertAdjacentHTML('beforeend', `<div>
+                messages.insertAdjacentHTML('beforeend', `<div class='message' data-id="${data.id}">
                                     <p>від:${from_user}: ${data.message}</p>
                                     <form action="" method="POST" class="delete_message">
                                     {% csrf_token %}
@@ -52,6 +49,10 @@
                                     </form>
                                 </div>`)
             }
+            else if (data.type === 'delete_message'){
+                const message_for_delete = document.querySelector(`.message[data-id="${data.message_id}"]`);
+                message_for_delete.remove()
+            }
         }
 
         let form = document.getElementById('form')
@@ -59,10 +60,11 @@
             e.preventDefault()
             let message = e.target.message.value
             chatSocket.send(JSON.stringify({
-                'message': message
+                'message': message,
+                'type': 'send_message'
             }))
         })
     </script>
-    <script src="{% static 'chat/js/AjaxDelete.js' %}" defer></script>
+
 </body>
 </html>
