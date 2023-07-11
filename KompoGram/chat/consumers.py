@@ -46,12 +46,10 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
             message = await create_message_async(chat, message_text, user)
 
-
-
             await self.channel_layer.group_send(
                 self.room_group_name,
                 {
-                    'type': 'chat_message',
+                    'type': 'new_message',
                     'user': username,
                     'to_user': to_user.username,
                     'message': message_text,
@@ -69,27 +67,26 @@ class ChatConsumer(AsyncWebsocketConsumer):
                 }
             )
 
-    async def chat_message(self, event):
-        event_type = event['type']
-        if event_type == 'chat_message':
-            user = event['user']
-            to_user = event['to_user']
-            message_text = event['message']
-            id = event['id']
+    async def new_message(self, event):
+        user = event['user']
+        to_user = event['to_user']
+        message_text = event['message']
+        id = event['id']
 
-            await self.send(text_data=json.dumps({
-                'type': 'chat',
-                'user': user,
-                'to_user': to_user,
-                'message': message_text,
-                'id': id
-            }))
-        elif event_type == 'delete_message':
-            message_id = event['message_id']
-            await self.send(text_data=json.dumps({
-                'type': 'delete_message',
-                'message_id': message_id,
-            }))
+        await self.send(text_data=json.dumps({
+            'type': 'new_message',
+            'user': user,
+            'to_user': to_user,
+            'message': message_text,
+            'id': id
+        }))
+
+    async def delete_message(self, event):
+        message_id = event['message_id']
+        await self.send(text_data=json.dumps({
+            'type': 'delete_message',
+            'message_id': message_id,
+        }))
 
     async def get_to_user_from_url(self):
         path = self.scope['path']

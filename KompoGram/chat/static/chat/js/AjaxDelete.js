@@ -6,6 +6,5 @@ $(document).ready(function() {
             'message_id': message_obj.dataset.id,
             'type': 'delete_message'
         }))
-        message_obj.remove();
     });
 });
