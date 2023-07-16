@@ -14,7 +14,7 @@
     <div id="messages">
         {% for i in All_Messages %}
             <div class="message" data-id="{{ i.id }}">
-                <p>від:{{ i.from_user }}: {{ i.message }}</p>
+                <p>від:{{ i.created_by }}: {{ i.message }}</p>
                 <button class="message__delete">Delete</button>
             </div>
         {% endfor %}
@@ -41,12 +41,10 @@
 
                 messages.insertAdjacentHTML('beforeend', `<div class='message' data-id="${data.id}">
                                     <p>від:${from_user}: ${data.message}</p>
-                                    <form action="" method="POST" class="delete_message">
-                                    {% csrf_token %}
                                     <input type="hidden" name="message_id" value="${data.id}">
-                                    <button type="submit">Delete</button>
-                                    </form>
+                                    <button class="message__delete">Delete</button>
                                 </div>`)
+                on_delete_message();
             }
             else if (data.type === 'delete_message'){
                 const message_for_delete = document.querySelector(`.message[data-id="${data.message_id}"]`);
@@ -62,9 +60,10 @@
                 'message': message,
                 'type': 'send_message'
             }))
+            form.reset()
         })
     </script>
-
+    
     <script src="{% static 'chat/js/AjaxMessage.js' %}" defer></script>
     <script src="{% static 'chat/js/AjaxDelete.js' %}" defer></script>
 

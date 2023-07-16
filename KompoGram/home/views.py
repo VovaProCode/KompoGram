@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
 from RegLog.models import FriendRequest, CustomUser
 from RegLog.selectors.friends import get_friends
+from django.http import JsonResponse
 
 
 # Create your views here.
@@ -28,3 +29,4 @@ def ChangeName(request):
         this_user = request.user
         this_user.username = new_name
         this_user.save()
+    return redirect('account')

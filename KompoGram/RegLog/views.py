@@ -14,12 +14,13 @@ def RegistrationPage(request):
         email = request.POST.get('email')
         password1 = request.POST.get('password1')
         password2 = request.POST.get('password2')
-        MyUser = CustomUser.objects.create_user(username, email, password1)
+        picture = request.POST.get('picture')
+        MyUser = CustomUser.objects.create_user(username, email, password1, picture)
         MyUser.save()
         if password1 != password2:
             return redirect('home')
         else:
-            user = authenticate(request, username=username, password=password1)
+            user = authenticate(request, username=username, password=password1, picture=picture)
             login(request, user)
             return redirect('home')
 
