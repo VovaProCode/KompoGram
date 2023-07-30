@@ -24,6 +24,14 @@
                 <div class="message" data-id="{{ i.id }}" data-message="{{ i.message }}">
                     <img src="{{ i.created_by.picture.url }}" class="profile_pictures">
                     <p>від:{{ i.created_by }}: {{ i.message }}</p>
+                    <button class="message__delete">Delete</button>
+                    <button class="message__reply">Reply</button>
+                </div>
+            {% endif %}
+            {% if i.picture %}
+                <div class="message" data-id="{{ i.id }}" data-message="{{ i.message }}">
+                    <img src="{{ i.created_by.picture.url }}" class="profile_pictures">
+                    <p>від:{{ i.created_by }}: {{ i.message }}</p>
                     <img src="{{ i.picture.url }}">
                     <button class="message__delete">Delete</button>
                     <button class="message__reply">Reply</button>
@@ -107,8 +115,8 @@
             if (form.dataset.isreply === 'no'){
                 console.log("уррааааааа")
                 e.preventDefault()
-                let fileInput = e.target.elements.photo;
-                let file = fileInput.files[0];
+                let message = e.target.message.value;
+                console.log(message)
                 chatSocket.send(JSON.stringify({
                     'message': message,
                     'type': 'send_message'

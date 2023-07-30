@@ -1,6 +1,8 @@
 import base64
 import json
 
+from django.core.files.base import ContentFile
+
 from asgiref.sync import sync_to_async
 from channels.generic.websocket import AsyncWebsocketConsumer
 
@@ -75,7 +77,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
             friends = await get_user_friend_async(user, to_user)
             chat = await get_chat_async(friends)
 
-            message = await create_message_async(chat, message_text, user, reply)
+            message = await create_message_async(chat, message_text, user, reply, picture=None)
 
             await self.channel_layer.group_send(
                 self.room_group_name,
@@ -103,7 +105,9 @@ class ChatConsumer(AsyncWebsocketConsumer):
         elif event_type == 'send_photo':
             print("BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB")
             photo = text_data_json['photo']
-            print(photo)
+            format, imgstr = photo.split(';base64,') 
+            ext = format.split('/')[-1] 
+            data = ContentFile(base64.b64decode(imgstr), name='temp.' + ext)
             user = self.scope['user']
             username = user.username
             first_user_id, second_user_id = await self.get_to_user_from_url()
@@ -115,7 +119,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
             friends = await get_user_friend_async(user, to_user)
             chat = await get_chat_async(friends)
 
-            message = await create_message_async(chat, message=None, created_by=user, reply=None, picture=photo)
+            message = await create_message_async(chat, message=None, created_by=user, reply=None, picture=data)
 
             await self.channel_layer.group_send(
                 self.room_group_name,
