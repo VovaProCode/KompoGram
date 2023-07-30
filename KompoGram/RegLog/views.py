@@ -14,8 +14,8 @@ def RegistrationPage(request):
         email = request.POST.get('email')
         password1 = request.POST.get('password1')
         password2 = request.POST.get('password2')
-        picture = request.POST.get('picture')
-        MyUser = CustomUser.objects.create_user(username, email, password1, picture)
+        picture = request.FILES.get('picture')
+        MyUser = CustomUser.objects.create_user(username=username, email=email, password=password1, picture=picture)
         MyUser.save()
         if password1 != password2:
             return redirect('home')

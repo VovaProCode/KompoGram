@@ -1,17 +1,21 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <link rel="stylesheet" href="{% static 'home/css/AccountCSS.css' %}">
 </head>
 <body>
     <h1>Вітаємо в личному кабінеті!</h1>
     <h1>Натисніть щоб поміняти:</h1>
-    <form action="{% url 'change-name' %}" method="POST">
+    <form action="{% url 'change-name' %}" method="POST" enctype="multipart/form-data">
         {% csrf_token %}
-       <p>{{ user.username }}</p>
+        <p>{{ user.username }}</p>
         <input type="text" placeholder="Змінити імя" name="new_name">
+        <input type="file" placeholder="Змінити картинку профілю" name="new_picture">
+        <img src="{{ user.picture.url }}" class="profile_picture">
     </form>
 </body>
 </html>

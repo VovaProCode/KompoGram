@@ -26,7 +26,9 @@ def AccountPage(request):
 def ChangeName(request):
     if request.method == 'POST':
         new_name = request.POST.get('new_name')
+        new_picture = request.FILES.get('new_picture')
         this_user = request.user
         this_user.username = new_name
+        this_user.picture = new_picture
         this_user.save()
     return redirect('account')

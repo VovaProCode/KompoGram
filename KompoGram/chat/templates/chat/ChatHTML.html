@@ -4,19 +4,39 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <link rel="stylesheet" href="{% static 'Chat/css/ChatCSS.css' %}">
 </head>
 <body>
     <h1>Привіт! {{ user.username }} це чат!</h1>
-    <form method="POST" action="" id="form">
-        {% csrf_token %}
-        <input type="text" name="message">
-    </form>
+    <div id="messageContainer">
+        <form method="POST" action="" id="form" data-isreply="no">
+            {% csrf_token %}
+            <input type="text" name="message" id="form1">
+        </form>
+        <form id="photo_form" enctype="multipart/form-data">
+            <input type="file" id="photoInput">
+            <button type="submit">submit</button>
+        </form>
+    </div>
     <div id="messages">
         {% for i in All_Messages %}
-            <div class="message" data-id="{{ i.id }}">
-                <p>від:{{ i.created_by }}: {{ i.message }}</p>
-                <button class="message__delete">Delete</button>
-            </div>
+            {% if i.reply == None %}
+                <div class="message" data-id="{{ i.id }}" data-message="{{ i.message }}">
+                    <img src="{{ i.created_by.picture.url }}" class="profile_pictures">
+                    <p>від:{{ i.created_by }}: {{ i.message }}</p>
+                    <img src="{{ i.picture.url }}">
+                    <button class="message__delete">Delete</button>
+                    <button class="message__reply">Reply</button>
+                </div>
+            {% else %}
+                <div class="message" data-id="{{ i.id }}" data-message="{{ i.message }}">
+                    <p>Відповідь на: {{ i.reply.message }}</p>
+                    <img src="{{ i.created_by.picture.url }}" class="profile_pictures">
+                    <p>від:{{ i.created_by }}: {{ i.message }}</p>
+                    <button class="message__delete">Delete</button>
+                    <button class="message__reply">Reply</button>
+                </div>
+            {% endif %}
         {% endfor %}
     </div>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
@@ -39,33 +59,85 @@
             if (data.type === 'new_message') {
                 let messages = document.getElementById('messages')
 
-                messages.insertAdjacentHTML('beforeend', `<div class='message' data-id="${data.id}">
+                messages.insertAdjacentHTML('beforeend', `<div class='message' data-id="${data.id}" data-message="${data.message}">
                                     <p>від:${from_user}: ${data.message}</p>
+                                    <img src="${data.picture_profile}" class="profile_pictures">
                                     <input type="hidden" name="message_id" value="${data.id}">
                                     <button class="message__delete">Delete</button>
+                                    <button class="message__reply">Reply</button>
                                 </div>`)
                 on_delete_message();
+                on_reply_message();
             }
             else if (data.type === 'delete_message'){
                 const message_for_delete = document.querySelector(`.message[data-id="${data.message_id}"]`);
                 message_for_delete.remove()
             }
+            else if (data.type === 'send_message_reply'){
+                let messages = document.getElementById('messages')
+                console.log('yes')
+                messages.insertAdjacentHTML('beforeend', `<div class='message' data-id="${data.id}" data-message="${data.message}">
+                                    <p>Відповідь на:${data.reply_to_message_text}</p>
+                                    <p>від:${from_user}: ${data.message}</p>
+                                    <img src="${data.picture_profile}" class="profile_pictures">
+                                    <input type="hidden" name="message_id" value="${data.id}">
+                                    <button class="message__delete">Delete</button>
+                                    <button class="message__reply">Reply</button>
+                                </div>`)
+                on_delete_message();
+                on_reply_message();
+            }
+            else if (data.type === 'new_photo'){
+                let messages = document.getElementById('messages')
+                messages.insertAdjacentHTML('beforeend', `<div class='message' data-id="${data.id}" data-message="${data.message}">
+                                    <p>від:${from_user}:</p>
+                                    <img src="${data.photo}" alt="none">
+                                    <img src="${data.picture_profile}" class="profile_pictures">
+                                    <input type="hidden" name="message_id" value="${data.id}">
+                                    <button class="message__delete">Delete</button>
+                                    <button class="message__reply">Reply</button>
+                                </div>`)
+                on_delete_message();
+                on_reply_message();
+            }
         }
 
         let form = document.getElementById('form')
         form.addEventListener('submit', (e) => {
+            if (form.dataset.isreply === 'no'){
+                console.log("уррааааааа")
+                e.preventDefault()
+                let fileInput = e.target.elements.photo;
+                let file = fileInput.files[0];
+                chatSocket.send(JSON.stringify({
+                    'message': message,
+                    'type': 'send_message'
+                }))
+                form.reset()
+            }
+        })
+        let photo_form = document.getElementById('photo_form')
+        let photoInput = document.getElementById('photoInput');
+        photo_form.addEventListener('submit', (e) => {
             e.preventDefault()
-            let message = e.target.message.value
-            chatSocket.send(JSON.stringify({
-                'message': message,
-                'type': 'send_message'
-            }))
-            form.reset()
+            let file = photoInput.files[0];
+            console.log("eeeeee")
+            let reader = new FileReader();
+            reader.onload = function(event) {
+                console.log('bbbb')
+                let photoData = event.target.result;
+                chatSocket.send(JSON.stringify({
+                    'photo': photoData,
+                    'type': 'send_photo'
+                }));
+            }
+            reader.readAsDataURL(file);
         })
     </script>
     
     <script src="{% static 'chat/js/AjaxMessage.js' %}" defer></script>
     <script src="{% static 'chat/js/AjaxDelete.js' %}" defer></script>
+    <script src="{% static 'chat/js/AjaxReply.js' %}" defer></script>
 
 </body>
 </html>
