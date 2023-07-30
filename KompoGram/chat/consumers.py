@@ -103,6 +103,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
         elif event_type == 'send_photo':
             print("BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB")
             photo = text_data_json['photo']
+            print(photo)
             user = self.scope['user']
             username = user.username
             first_user_id, second_user_id = await self.get_to_user_from_url()

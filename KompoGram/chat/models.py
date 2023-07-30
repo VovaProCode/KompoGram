@@ -19,6 +19,7 @@ def image_upload_path(instance, filename):
     ext = filename.split('.')[-1]
     filename = f"image_{uuid.uuid4().hex[:10]}.{ext}"
     return os.path.join('images', filename)
+
 class Messages(models.Model):
     chat = models.ForeignKey(Chat, on_delete=models.CASCADE)
     message = models.TextField('Повідомлення', null=True)

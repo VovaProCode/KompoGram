@@ -14,6 +14,10 @@ class CustomUserManager(BaseUserManager):
 
         user.save(using=self._db)
         return user
+    
+    def create_superuser(self, username, email, password=None, **extra_fields):
+        return self.create_user(username, email, password, **extra_fields)
+    
 class CustomUser(AbstractUser):
     picture = models.ImageField('Аватарка', upload_to='profile_pictures')
 
