@@ -21,38 +21,41 @@
         </div>
         <div class="friends">
             <h2>Ваші друзі:</h2>
-            <ul class="friend-list">
+            <div class="friend-list">
                 {% for f in friends %}
                     {% for last_message in last_messages %}
                         {% if f.id == last_message.chat.friends.first_user.id or f.id == last_message.chat.friends.second_user.id %}
-                            <li class="friend-box">
-                                <a>
-                                    <div class="friend-avatar">
-                                        <img src="{{ f.picture.url }}" alt="{{ f.username }}">
-                                    </div>
-                                    <div class="friend-name">
-                                        <a href="{% url 'ChatId' f.id %}">{{ f }}</a>
-                                    </div>
-                                    <div class="last_message_div">
-                                        <div class="last_message">
-                                            {% if not last_message.message %}
-                                                <p>Картинка</p>
-                                            {% else %}
-                                                <p class="last_message_text">{{ last_message.message }}</p>
-                                            {% endif %}
-                                        </div>
-                                    </div>
-                                </a>
-                            </li>
+                            <div class="friend-box">
+                                <div class="friend-avatar">
+                                    <img src="{{ f.picture.url }}" alt="{{ f.username }}">
+                                </div>
+                                <div class="friend-name">
+                                    <a class="friend-url" href="{% url 'ChatId' f.id %}">{{ f }}</a>
+                                </div>
+                                <div class="last_message_div one-row-text"> 
+                                    {% if not last_message.message %}
+                                        <p>Картинка</p>
+                                    {% else %}
+                                        {{ last_message.message }}
+                                    {% endif %}
+                                </div>
+                            </div>
                         {% endif %}
                     {% endfor %}
                 {% endfor %}
-            </ul>
+            </div>
         </div>
         <div>
             <h1>Запроси в друзі:</h1>
             {% for r in friends_requests %}
-                <a href="{% url 'accept' r.id %}">{{ r.from_user }}</a>
+                <div class="friend-box">
+                    <div class="friend-avatar">
+                        <img src="{{ r.from_user.picture.url }}" alt="{{ r.username }}">
+                    </div>
+                    <div class="friend-name">
+                        <a href="{% url 'accept' r.id %}" class="friend_request_name">{{ r.from_user }}</a>
+                    </div>
+                </div>
             {% endfor %}
         </div>
     </div>
@@ -62,7 +65,7 @@
         </div>
     </div>
     <div class="right_div">
-
+        <a href="{% url 'home' %}"><i class="fas fa-home large-icon"></i></a>
     </div>
 </body>
 </html>

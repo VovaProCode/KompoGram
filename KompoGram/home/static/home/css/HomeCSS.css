@@ -8,6 +8,7 @@ body {
 h1, h2 {
     text-align: center;
     margin: 10px 0;
+    font-size: 27px;
 }
 
 /* Стили для левой колонки */
@@ -91,13 +92,7 @@ img {
     margin-right: 10px;
 }
 
-/* Стили для ссылки "Выйти" */
-.logout-link {
-    color: #f44336;
-    text-decoration: none;
-    display: inline-flex;
-    align-items: center;
-}
+/* Стили для ссылки "Выйти" *
 
 /* Стили для центральной колонки */
 .center_div {
@@ -115,19 +110,35 @@ img {
 
 /* Стили для правой колонки */
 .right_div {
+    /* Add flexbox to center the icon */
+    display: flex;
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically */  
     flex: 0.7;
     background-color: #f0f0f0;
     padding: 20px;
     box-sizing: border-box;
+    position: relative;
     color: white;
-}
+  }
+  
+  /* Add styling for the large icon */
+  .large-icon {
+    font-size: 100px; /* Adjust the size as needed */
+    color: #4bb9c9; /* Change the icon color */
+    transition: transform 0.2s; /* Add transition property for smooth animation */
+  }
+  
+  /* Add hover effect to zoom in the icon */
+  .right_div:hover .large-icon {
+    transform: scale(1.2); /* Increase the scale value for more zoom */
+  }
 
 /* Анимация при наведении на ссылки */
 a {
     color: #4bb9c9;
     text-decoration: none;
     display: block;
-    margin-bottom: 10px;
     transition: color 0.3s;
 }
 
@@ -146,6 +157,7 @@ a:hover {
 }
 
 .friend-box {
+    position: relative;
     display: flex;
     align-items: center;
     background-color: white;
@@ -154,6 +166,7 @@ a:hover {
     padding: 10px;
     margin-bottom: 10px;
     transition: transform 0.2s;
+    max-width: 422px;
 }
 
 .friend-box:hover {
@@ -186,6 +199,15 @@ a:hover {
     color: #007bff;
 }
 
+.friend-url::before {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    content: "";
+}
+
 .select-message {
     background-color: #ffffff;
     border-radius: 10px;
@@ -195,10 +217,22 @@ a:hover {
 }
 .last_message {
     margin-left: 7.5px;
+}
+
+
+.one-row-text {
+    margin-left: 7.5px;
+    flex: 1;
+    display: block;
+    white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    white-space: nowrap;
 }
-.friends, .friend-requests {
-    margin-bottom: 12px;
+.friend_request_name::before{
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    content: "";
 }
