@@ -3,29 +3,66 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Мессенджер</title>
+    <link rel="stylesheet" href="{% static 'home/css/HomeCSS.css' %}">
+    <!-- Подключение Font Awesome для иконок -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 </head>
 <body>
-    <h1>home</h1>
-    <a href="{% url 'logout' %}">logout</a>
-    <H1>Привіт! {{ username }}</H1>
-    <h1>Ваша почта - {{ email }}</h1>
-    <a href="{% url 'account' %}">Кабінет користувача</a>
-    {% for i in users %}
-        <h1>{{ i }}</h1>
-    {% endfor %}
-    <h1>Request</h1>
-    {% for r in friends_requests %}
-        <a href="{% url 'accept' r.id %}">{{ r.from_user }}</a>
-    {% endfor %}
-    <h1>Friends</h1>
-<!--    {{ user.friends.all }}-->
-    {% for f in friends %}
-        <a href="{% url 'ChatId' f.id %}">{{ f }}</a>
-    {% endfor %}
-    <form action="{% url 'search_qqq' %}" method="POST">
-        {% csrf_token %}
-        <input type="search" placeholder="Пошук користувачів" name="searched">
-    </form>
+    <div class="left_div">
+        <h1><i class="fas fa-comment-alt"></i> Kompogram </h1>
+        <div class="search-and-friends">
+            <form action="{% url 'search_qqq' %}" method="POST" class="search-form">
+                {% csrf_token %}
+                <input type="search" placeholder="Пошук користувачів" name="searched">
+                <button type="submit"><i class="fas fa-search"></i></button>
+            </form>
+            <a href="{% url 'change-name' %}" class="settings-link"><i class="fas fa-cog"></i> Налаштування аккаунту </a>
+        </div>
+        <div class="friends">
+            <h2>Ваші друзі:</h2>
+            <ul class="friend-list">
+                {% for f in friends %}
+                    {% for last_message in last_messages %}
+                        {% if f.id == last_message.chat.friends.first_user.id or f.id == last_message.chat.friends.second_user.id %}
+                            <li class="friend-box">
+                                <a>
+                                    <div class="friend-avatar">
+                                        <img src="{{ f.picture.url }}" alt="{{ f.username }}">
+                                    </div>
+                                    <div class="friend-name">
+                                        <a href="{% url 'ChatId' f.id %}">{{ f }}</a>
+                                    </div>
+                                    <div class="last_message_div">
+                                        <div class="last_message">
+                                            {% if not last_message.message %}
+                                                <p>Картинка</p>
+                                            {% else %}
+                                                <p class="last_message_text">{{ last_message.message }}</p>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </a>
+                            </li>
+                        {% endif %}
+                    {% endfor %}
+                {% endfor %}
+            </ul>
+        </div>
+        <div>
+            <h1>Запроси в друзі:</h1>
+            {% for r in friends_requests %}
+                <a href="{% url 'accept' r.id %}">{{ r.from_user }}</a>
+            {% endfor %}
+        </div>
+    </div>
+    <div class="center_div">
+        <div class="select-message">
+            <h2>Виберіть, кому хотіли би написати</h2>
+        </div>
+    </div>
+    <div class="right_div">
+
+    </div>
 </body>
 </html>

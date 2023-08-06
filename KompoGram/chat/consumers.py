@@ -64,8 +64,10 @@ class ChatConsumer(AsyncWebsocketConsumer):
             print("is ok")
             message_text = text_data_json['message_text']
             reply_message_id = text_data_json['to_reply']
+            print(text_data_json)
             print(reply_message_id)
             reply = await get_messages_by_id_async(reply_message_id)
+            print(reply.message)
             user = self.scope['user']
             username = user.username
             first_user_id, second_user_id = await self.get_to_user_from_url()

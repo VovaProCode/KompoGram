@@ -7,31 +7,35 @@
     <link rel="stylesheet" href="{% static 'RegLog/css/RegistrationCSS.css' %}">
 </head>
 <body>
+    <div class="Welcome_Site">
+        <h1>Вітаємо на сайті Kompogram!</h1>
+        <h2>Створіть аккаунт</h2>
+    </div>
     <form method="POST" action="" enctype="multipart/form-data">
         {% csrf_token %}
         <div class="FormDiv">
             <div class="usernamediv">
-                <label for="username">Username</label>
-                <input type="text" placeholder="Username" name="username" id="username">
+                <label for="username">Логін</label>
+                <input type="text" placeholder="Введіть логін" name="username" id="username">
             </div>
             <div class="emaildiv">
-                <label for="email">Email</label>
-                <input type="email" placeholder="Email" name="email" id="email">
+                <label for="email">Почта</label>
+                <input type="email" placeholder="Введіть почту" name="email" id="email">
             </div>
             <div class="password1div">
-                <label for="password1">Password</label>
-                <input type="password" placeholder="Password" name="password1" id="password1">
+                <label for="password1">Пароль</label>
+                <input type="password" placeholder="Введіть пароль" name="password1" id="password1">
             </div>
             <div class="password2div">
-                <label for="password2">Confirm password</label>
-                <input type="password" placeholder="Confirm password" name="password2" id="password2">
+                <label for="password2">Підтвердіть пароль</label>
+                <input type="password" placeholder="Підтвердіть пароль" name="password2" id="password2">
             </div>
             <div class="picturediv">
-                <label for="picture">Picture Account</label>
+                <label for="picture">Фото аккаунта</label>
                 <input type="file" name="picture">
             </div>
             <input type="submit" >
-            <a href="{% url 'login' %}">I have account</a>
+            <a href="{% url 'login' %}">Я маю аккаунт</a>
         </div>
     </form>
 </body>

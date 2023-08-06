@@ -1,0 +1,204 @@
+/* Общие стили */
+body {
+    display: flex;
+    font-family: Arial, sans-serif;
+    margin: 0;
+}
+
+h1, h2 {
+    text-align: center;
+    margin: 10px 0;
+}
+
+/* Стили для левой колонки */
+.left_div {
+    flex: 1;
+    background-color: #f0f0f0;
+    color: black;
+    padding: 20px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+}
+.search-and-friends {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 20px;
+}
+
+.settings-link {
+    color: #4bb9c9;
+    text-decoration: none;
+    margin-top: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: color 0.3s;
+}
+.settings-link i {
+    margin-right: 5px; /* Расстояние между иконкой и текстом */
+}
+
+.settings-link:hover {
+    color: #007bff;
+}
+
+.search-form {
+    margin-bottom: 15px;
+    position: relative;
+}
+
+input[type="search"] {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    font-size: 14px;
+    color: #333;
+}
+
+button[type="submit"] {
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+/* Стили для списков друзей и запросов в друзья */
+.friends, .friend-requests {
+    margin-bottom: 20px;
+}
+
+ul {
+    list-style: none;
+    padding: 0;
+}
+
+li {
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+}
+
+img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+/* Стили для ссылки "Выйти" */
+.logout-link {
+    color: #f44336;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+}
+
+/* Стили для центральной колонки */
+.center_div {
+    flex: 2;
+    background-color: #f0f0f0;
+    padding: 20px;
+    box-sizing: border-box;
+    border-left: 3px solid #4bb9c9;
+    border-right: 3px solid #4bb9c9;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+/* Стили для правой колонки */
+.right_div {
+    flex: 0.7;
+    background-color: #f0f0f0;
+    padding: 20px;
+    box-sizing: border-box;
+    color: white;
+}
+
+/* Анимация при наведении на ссылки */
+a {
+    color: #4bb9c9;
+    text-decoration: none;
+    display: block;
+    margin-bottom: 10px;
+    transition: color 0.3s;
+}
+
+a:hover {
+    color: #007bff;
+}
+
+/* Медиа-запрос для более маленьких экранов */
+@media (max-width: 768px) {
+    .left_div, .center_div, .right_div {
+        padding: 10px;
+    }
+}
+.friend-list {
+    padding: 0;
+}
+
+.friend-box {
+    display: flex;
+    align-items: center;
+    background-color: white;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 10px;
+    margin-bottom: 10px;
+    transition: transform 0.2s;
+}
+
+.friend-box:hover {
+    transform: translateY(-5px);
+}
+
+/* Стили для аватара друга */
+.friend-avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    overflow: hidden;
+    margin-right: 10px;
+}
+
+.friend-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Стили для имени друга */
+.friend-name a {
+    color: #333;
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+.friend-name a:hover {
+    color: #007bff;
+}
+
+.select-message {
+    background-color: #ffffff;
+    border-radius: 10px;
+    padding: 10px;
+    text-align: center;
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
+}
+.last_message {
+    margin-left: 7.5px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.friends, .friend-requests {
+    margin-bottom: 12px;
+}

@@ -20,23 +20,22 @@
     </div>
     <div id="messages">
         {% for i in All_Messages %}
-            {% if i.reply == None %}
+            {% if not i.reply and not i.picture %}
                 <div class="message" data-id="{{ i.id }}" data-message="{{ i.message }}">
                     <img src="{{ i.created_by.picture.url }}" class="profile_pictures">
                     <p>від:{{ i.created_by }}: {{ i.message }}</p>
                     <button class="message__delete">Delete</button>
                     <button class="message__reply">Reply</button>
                 </div>
-            {% endif %}
-            {% if i.picture %}
+            {% elif i.picture %}
                 <div class="message" data-id="{{ i.id }}" data-message="{{ i.message }}">
                     <img src="{{ i.created_by.picture.url }}" class="profile_pictures">
-                    <p>від:{{ i.created_by }}: {{ i.message }}</p>
+                    <p>від:{{ i.created_by }}: </p>
                     <img src="{{ i.picture.url }}">
                     <button class="message__delete">Delete</button>
                     <button class="message__reply">Reply</button>
                 </div>
-            {% else %}
+            {% elif i.reply %}
                 <div class="message" data-id="{{ i.id }}" data-message="{{ i.message }}">
                     <p>Відповідь на: {{ i.reply.message }}</p>
                     <img src="{{ i.created_by.picture.url }}" class="profile_pictures">
@@ -66,7 +65,6 @@
             let from_user = data.user;
             if (data.type === 'new_message') {
                 let messages = document.getElementById('messages')
-
                 messages.insertAdjacentHTML('beforeend', `<div class='message' data-id="${data.id}" data-message="${data.message}">
                                     <p>від:${from_user}: ${data.message}</p>
                                     <img src="${data.picture_profile}" class="profile_pictures">
@@ -74,11 +72,13 @@
                                     <button class="message__delete">Delete</button>
                                     <button class="message__reply">Reply</button>
                                 </div>`)
-                on_delete_message();
-                on_reply_message();
+                on_delete_message()
+                on_reply_message()
             }
             else if (data.type === 'delete_message'){
                 const message_for_delete = document.querySelector(`.message[data-id="${data.message_id}"]`);
+                console.log(message_for_delete)
+                console.log('Шоб удалить')
                 message_for_delete.remove()
             }
             else if (data.type === 'send_message_reply'){
@@ -92,8 +92,8 @@
                                     <button class="message__delete">Delete</button>
                                     <button class="message__reply">Reply</button>
                                 </div>`)
-                on_delete_message();
-                on_reply_message();
+                on_delete_message()
+                on_reply_message()
             }
             else if (data.type === 'new_photo'){
                 let messages = document.getElementById('messages')
@@ -105,9 +105,11 @@
                                     <button class="message__delete">Delete</button>
                                     <button class="message__reply">Reply</button>
                                 </div>`)
-                on_delete_message();
-                on_reply_message();
+                on_delete_message()
+                on_reply_message()
             }
+            let all_messages = document.getElementsByClassName('message__delete')
+            console.log(all_messages)
         }
 
         let form = document.getElementById('form')
@@ -139,6 +141,7 @@
                     'type': 'send_photo'
                 }));
             }
+            photo_form.reset()
             reader.readAsDataURL(file);
         })
     </script>

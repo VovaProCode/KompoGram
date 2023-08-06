@@ -13,8 +13,9 @@
     <form action="{% url 'change-name' %}" method="POST" enctype="multipart/form-data">
         {% csrf_token %}
         <p>{{ user.username }}</p>
-        <input type="text" placeholder="Змінити імя" name="new_name">
-        <input type="file" placeholder="Змінити картинку профілю" name="new_picture">
+        <input type="text" placeholder="Змінити імя" name="new_name" value="{{ user.username }}">
+        <input type="file" placeholder="Змінити картинку профілю" name="new_picture" value="{{ user.picture.url }}">
+        <p>{{ error }}</p>
         <img src="{{ user.picture.url }}" class="profile_picture">
     </form>
 </body>

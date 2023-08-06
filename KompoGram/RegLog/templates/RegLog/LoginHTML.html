@@ -4,9 +4,13 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
-    <link rel="stylesheet" href="{% static 'RegLog/css/RegistrationCSS.css' %}">
+    <link rel="stylesheet" href="{% static 'RegLog/css/LoginCSS.css' %}">
 </head>
 <body>
+    <div class="Welcome_Site">
+        <h1>Вітаємо на сайті Kompogram!</h1>
+        <h2>Увійдіть в аккаунт</h2>
+    </div>
     <form method="POST" action="">
         {% csrf_token %}
         <div class="FormDiv">
@@ -19,7 +23,7 @@
                 <input type="password" placeholder="Password" name="password1" id="password1">
             </div>
             <input type="submit" >
-            <a href="{% url 'registration' %}">I haven't account</a>
+            <a href="{% url 'registration' %}">Я не маю аккаунта</a>
         </div>
     </form>
 </body>
