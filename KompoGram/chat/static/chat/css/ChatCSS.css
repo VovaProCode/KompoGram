@@ -1,4 +1,149 @@
-.profile_pictures{
-    max-width: 100px;
-    max-height: 100px;
+body {
+    display: flex;
+    font-family: Arial, sans-serif;
+    margin: 0;
+    background-color: #f0f0f0;
+    height: 100vh;
+}
+
+.profile_pictures {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.left_and_center_div {
+    padding: 20px;
+    box-sizing: border-box;
+    border-right: 3px solid #4bb9c9;
+    flex-direction: column;
+    overflow-y: scroll;
+    height: 100%;
+    display: flex;
+    width: 100%;
+}
+
+.content{
+    display: flex;
+    flex: 3;
+    height: 100vh;
+    position: relative;
+}
+
+.message {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+    width: 100%;
+}
+
+.message img.profile_pictures {
+    margin-right: 10px;
+}
+
+.message p {
+    margin: 0;
+    padding: 8px;
+    border-radius: 10px;
+    background-color: #e1e1e1;;
+    color: black;
+}
+
+.message p:first-child {
+    background-color: #e1e1e1;
+    color: black;
+    margin-bottom: 5px;
+}
+
+.message img {
+    max-width: 100%;
+    max-height: 300px;
+}
+
+.message__delete, .message__reply {
+    background-color: #4bb9c9;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    margin-top: 5px;
+    cursor: pointer;
+}
+
+.message__delete {
+    margin-left: 10px;
+}
+.container {
+    display: flex;
+    height: 100%;
+    flex: 3;
+}
+#messageContainer {
+    display: flex;
+    justify-content: center;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    padding: 0px;
+    width: 100%;
+}
+.text_message{
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 500px;
+}
+.right_div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex: 0.66;
+    background-color: #f0f0f0;
+    padding: 20px;
+    box-sizing: border-box;
+    position: relative;
+    color: white;
+    height: 100vh;
+}
+
+
+.large-icon {
+    font-size: 100px;
+    color: #4bb9c9;
+    transition: transform 0.2s;
+}
+
+.right_div:hover .large-icon {
+    transform: scale(1.2);
+}
+
+.home_div {
+    position: fixed;
+    color: #4bb9c9;
+    font-size: 24px;
+}
+.home-link::before{
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    content: "";
+}
+#form1{
+    width: 1200px
+}
+.div_to_reply{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 400px;
+    height: 100px;
+    background-color: white;
+    border-radius: 10px;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    margin-bottom: 400px;
+    margin-right: 20px;
 }

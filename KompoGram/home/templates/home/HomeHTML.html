@@ -22,26 +22,24 @@
         <div class="friends">
             <h2>Ваші друзі:</h2>
             <div class="friend-list">
-                {% for f in friends %}
-                    {% for last_message in last_messages %}
-                        {% if f.id == last_message.chat.friends.first_user.id or f.id == last_message.chat.friends.second_user.id %}
-                            <div class="friend-box">
-                                <div class="friend-avatar">
-                                    <img src="{{ f.picture.url }}" alt="{{ f.username }}">
-                                </div>
-                                <div class="friend-name">
-                                    <a class="friend-url" href="{% url 'ChatId' f.id %}">{{ f }}</a>
-                                </div>
-                                <div class="last_message_div one-row-text"> 
-                                    {% if not last_message.message %}
-                                        <p>Картинка</p>
-                                    {% else %}
-                                        {{ last_message.message }}
-                                    {% endif %}
-                                </div>
-                            </div>
-                        {% endif %}
-                    {% endfor %}
+                {% for f, last_message in friends %}
+                    <div class="friend-box">
+                        <div class="friend-avatar">
+                            <img src="{{ f.picture.url }}" alt="{{ f.username }}">
+                        </div>
+                        <div class="friend-name">
+                            <a class="friend-url" href="{% url 'ChatId' f.id %}">{{ f }}</a>
+                        </div>
+                        <div class="last_message_div one-row-text">
+                            {% if last_message.picture %}
+                                <p>Картинка</p>
+                            {% elif not last_message and not last_message.message %}
+                                <p>Немає повідомлень</p>
+                            {% else %}
+                                {{ last_message.message }}
+                            {% endif %}
+                        </div>
+                    </div>
                 {% endfor %}
             </div>
         </div>
@@ -65,7 +63,7 @@
         </div>
     </div>
     <div class="right_div">
-        <a href="{% url 'home' %}"><i class="fas fa-home large-icon"></i></a>
+        <a href="{% url 'home' %}" class="home_div"><i class="fas fa-home large-icon"></i></a>
     </div>
 </body>
 </html>

@@ -1,4 +1,157 @@
-.profile_picture{
+/* Общие стили */
+body {
+    display: flex;
+    font-family: Arial, sans-serif;
+    margin: 0;
+    background-color: #f0f0f0;
+}
+
+.container {
+    display: flex;
+    height: 100vh;
+    flex: 3;
+}
+
+/* Стили для левой и центральной колонок */
+.left_and_center_div {
+    padding: 20px;
+    box-sizing: border-box;
+    border-right: 3px solid #4bb9c9;
+    display: flex;
+    flex: 3;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.welcome-title {
+    text-align: center;
+    font-size: 32px;
+    margin-bottom: 20px;
+}
+
+.form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.username {
+    text-align: center;
+    font-size: 18px;
+    margin-bottom: 10px;
+}
+
+.name-input,
+.picture-input {
+    width: 35%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 14px;
+    color: #333;
+}
+
+.picture-input {
+    margin-top: 10px;
+}
+
+.error-message {
+    color: red;
+    text-align: center;
+    margin-top: 10px;
+}
+
+.profile-picture {
     width: 100px;
     height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+/* Стили для правой колонки */
+.right_div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex: 0.68;
+    background-color: #f0f0f0;
+    padding: 20px;
+    box-sizing: border-box;
+    position: relative;
+    color: white;
+    height: 100vh;
+}
+
+/* Стили для иконки домика */
+.large-icon {
+    font-size: 100px;
+    color: #4bb9c9;
+    transition: transform 0.2s;
+}
+
+.home-link::before{
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    content: "";
+}
+
+.right_div:hover .large-icon {
+    transform: scale(1.2);
+}
+.form h1{
+    font-size: 26px;
+}
+
+.form input[type="submit"] {
+    display: inline-block;
+    background-color: #4bb9c9;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+    font-family: Arial, sans-serif;
+    text-decoration: none;
+}
+
+/* При наведении на кнопку */
+.form input[type="submit"]:hover {
+    background-color: black;
+    color: white;
+}
+
+/* При активации кнопки */
+.form input[type="submit"]:active {
+    background-color: #0056b3;
+}
+.logout-link {
+    margin-top: 10px;
+    display: inline-block;
+    background-color: #d9534f; /* Красный цвет кнопки */
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+    font-family: Arial, sans-serif;
+    text-decoration: none;
+}
+
+/* При наведении на кнопку */
+.logout-link:hover {
+    background-color: #c9302c; /* Темно-красный цвет при наведении */
+    color: white;
+}
+
+/* При активации кнопки */
+.logout-link:active {
+    background-color: #ac2925; /* Ещё более темный цвет при активации */
 }

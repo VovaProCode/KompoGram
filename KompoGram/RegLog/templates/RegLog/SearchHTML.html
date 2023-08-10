@@ -3,12 +3,31 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Пошук користувачів</title>
+    <link rel="stylesheet" href="{% static 'RegLog/css/SearchCSS.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 </head>
 <body>
-  {% for i in users %}
-      <h1>{{ i }}</h1>
-      <a href="{% url 'add-friend' i.id %}">добавить друга</a>
-  {% endfor %}
+    <div class="container">
+        <div class="left_and_center_div">
+            <h1 class="search-title">Знайдені користувачі:</h1>
+            <div class="user-box-container">
+                {% for user in users %}
+                    <div class="user-box">
+                        {% if user.picture %}
+                            <img src="{{ user.picture.url }}" alt="User Picture" class="user-picture">
+                        {% endif %}
+                        <h2 class="user-name">{{ user }}</h2>
+                        <div class="user-info">
+                            <a href="{% url 'add-friend' user.id %}" class="add-friend-link">Додати друга</a>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="right_div">
+            <a href="{% url 'home' %}" class="home-link"><i class="fas fa-home large-icon"></i></a>
+        </div>
+    </div>
 </body>
 </html>

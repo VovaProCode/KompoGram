@@ -130,6 +130,8 @@ class ChatConsumer(AsyncWebsocketConsumer):
                     'user': username,
                     'to_user': to_user.username,
                     'photo': message.picture.url,
+                    'width': message.picture.width,
+                    'height': message.picture.height,
                     'id': message.id,
                     'picture_profile': message.created_by.picture.url
                 }
@@ -181,6 +183,8 @@ class ChatConsumer(AsyncWebsocketConsumer):
         photo = event['photo']
         id = event['id']
         picture_profile = event['picture_profile']
+        width = event['width']
+        height = event['height']
 
         await self.send(text_data=json.dumps({
             'type': 'new_photo',
@@ -188,7 +192,9 @@ class ChatConsumer(AsyncWebsocketConsumer):
             'to_user': to_user,
             'photo': photo,
             'id': id,
-            'picture_profile': picture_profile
+            'picture_profile': picture_profile,
+            'height': height,
+            'width': width,
         }))
 
     async def get_to_user_from_url(self):

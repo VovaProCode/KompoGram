@@ -4,19 +4,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Личний кабінет</title>
     <link rel="stylesheet" href="{% static 'home/css/AccountCSS.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 </head>
 <body>
-    <h1>Вітаємо в личному кабінеті!</h1>
-    <h1>Натисніть щоб поміняти:</h1>
-    <form action="{% url 'change-name' %}" method="POST" enctype="multipart/form-data">
-        {% csrf_token %}
-        <p>{{ user.username }}</p>
-        <input type="text" placeholder="Змінити імя" name="new_name" value="{{ user.username }}">
-        <input type="file" placeholder="Змінити картинку профілю" name="new_picture" value="{{ user.picture.url }}">
-        <p>{{ error }}</p>
-        <img src="{{ user.picture.url }}" class="profile_picture">
-    </form>
+    <div class="container">
+        <div class="left_and_center_div">
+            <h1 class="welcome-title">Вітаємо в особистому кабінеті!</h1>
+            <form action="{% url 'change-name' %}" method="POST" enctype="multipart/form-data" class="form">
+                {% csrf_token %}
+                <p class="username">{{ user.username }}</p>
+                <input type="text" class="name-input" placeholder="Змінити ім'я" name="new_name" value="{{ user.username }}">
+                <h1>Теперішнє фото профіля:</h1>
+                <img src="{{ user.picture.url }}" alt="Profile Picture" class="profile-picture">
+                <input type="file" class="picture-input" name="new_picture" value="Виберіть файл">
+                <input type="submit" value="Обновити профіль">
+                <a href="{% url 'logout' %}" class="logout-link">Вийти</a>
+                <p class="error-message">{{ error }}</p>
+            </form>
+        </div>
+        <div class="right_div">
+            <a href="{% url 'home' %}" class="home-link"><i class="fas fa-home large-icon"></i></a>
+        </div>
+    </div>
 </body>
 </html>

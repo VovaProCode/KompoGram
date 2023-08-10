@@ -65,5 +65,6 @@ body {
 
 .FormDiv input[type="submit"]:hover,
 .FormDiv a:hover {
-    background-color: #4bb9c9;
+    background-color: black;
+    color: white;
 }

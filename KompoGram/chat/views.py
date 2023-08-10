@@ -17,6 +17,8 @@ from .services.message import create_message
 
 # щоб відкрити чат, нам достатньо передавати id друга, свій id ми і так взнаємо
 def ChatPage(request, another_user_id):
+    if not request.user.is_authenticated:
+        return redirect('registration')
     user = request.user  # ось в request і так зберігається інфа про те, хто ми
     another_user = get_user_by_id(another_user_id)
     friends = get_user_friend(user, another_user)

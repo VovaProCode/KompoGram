@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
 from RegLog.models import FriendRequest, CustomUser
-from RegLog.selectors.friends import get_friends
+from RegLog.selectors.friends import get_friends, get_friends_and_friend_message
 from django.http import JsonResponse
 
 from RegLog.serives.friends import get_user_friend
@@ -19,24 +19,14 @@ def HomePage(request):
         email = request.user.email
         users = CustomUser.objects.exclude(username='admin')
         friends_requests = FriendRequest.objects.filter(to_user=request.user)
-        friends = get_friends(request.user)
-        last_messages = []
-        for friend in friends:
-            Friends = get_user_friend(request.user, friend)
-            chat = get_chat(Friends)
-            all_friends_messages = get_chat_messages_none_time(chat)
-            print(all_friends_messages)
-            try:
-                last_messages.append(all_friends_messages.last())
-            except:
-                print("No first message")
-        print(last_messages)
+        last_messages_and_friends = get_friends_and_friend_message(request.user)
         context = {"username": username, 'email': email,"users": users,
-                   'friends_requests': friends_requests, 'friends': friends,
-                   'last_messages': last_messages}
+                   'friends_requests': friends_requests, 'friends': last_messages_and_friends}
         return render(request, 'home/HomeHTML.html', context)
 
 def AccountPage(request):
+    if not request.user.is_authenticated:
+        return redirect('registration')
     return render(request, 'home/AccountHTML.html')
 
 def ChangeName(request):

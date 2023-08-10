@@ -1,9 +1,13 @@
+import os
+
+from django.conf import settings
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from .models import CustomUser, FriendRequest
 from .serives.friends import add_friend
+from django.core.files import File
 
 
 # Create your views here.
@@ -15,8 +19,8 @@ def RegistrationPage(request):
         password1 = request.POST.get('password1')
         password2 = request.POST.get('password2')
         picture = request.FILES.get('picture')
-        MyUser = CustomUser.objects.create_user(username=username, email=email, password=password1, picture=picture)
-        MyUser.save()
+        if not picture:
+            return redirect('home')
         if password1 != password2:
             return redirect('home')
         else:
@@ -43,9 +47,12 @@ def LogoutPage(request):
     logout(request)
     return redirect('login')
 def SearchUsers(request):
+    if not request.user.is_authenticated:
+        return redirect('registration')
     if request.method == 'POST':
         searched = request.POST["searched"]
-        users = CustomUser.objects.filter(username__icontains=searched).exclude(username='admin')
+        users = CustomUser.objects.filter(username__icontains=searched).exclude(username=request.user.username).exclude(username='admin')
+        print(users)
         context = {"users": users}
         return render(request, 'RegLog/SearchHTML.html', context)
     elif "term" in request.GET:

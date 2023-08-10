@@ -1,0 +1,126 @@
+body {
+    display: flex;
+    font-family: Arial, sans-serif;
+    margin: 0;
+    background-color: #f0f0f0;
+}
+
+.container {
+    display: flex;
+    height: 100vh;
+    flex-direction: row;
+    flex: 3;
+}
+
+.left_and_center_div {
+    padding: 20px;
+    box-sizing: border-box;
+    border-right: 3px solid #4bb9c9;
+    display: flex;
+    flex-direction: column;
+    flex: 3;
+}
+
+.search-title {
+    text-align: center;
+    font-size: 32px;
+    margin-bottom: 20px;
+}
+
+.user-box-container {
+    display: flex;
+    flex-wrap: wrap; /* Размещение в несколько рядов */
+    justify-content: center;
+}
+
+.user-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 40px;
+    width: 300px;
+    margin-right: 40px;
+    min-width: 250px; /* Минимальная ширина, чтобы поместилось 3 блока */
+    border-radius: 10px;
+    background-color: white;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 15px;
+}
+
+.user-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 10px; /* Отступ между именем и кнопкой */
+}
+
+.user-picture {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 10px; /* Отступ между картинкой и именем */
+}
+
+.user-name {
+    font-size: 24px;
+}
+
+.add-friend-link {
+    color: #4bb9c9;
+    text-decoration: none;
+    margin-top: 10px; /* Отступ над кнопкой */
+    padding: 10px 15px;
+    border: 2px solid #4bb9c9;
+    border-radius: 5px;
+    font-size: 18px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.add-friend-link:hover {
+    background-color: #4bb9c9;
+    color: #fff;
+}
+
+.right_div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex: 0.68;
+    background-color: #f0f0f0;
+    padding: 20px;
+    box-sizing: border-box;
+    position: relative;
+    color: white;
+    height: 100vh;
+}
+
+.large-icon {
+    font-size: 100px;
+    color: #4bb9c9;
+    transition: transform 0.2s;
+}
+
+.home-link {
+    text-decoration: none;
+    color: white;
+}
+
+.right_div:hover .large-icon {
+    transform: scale(1.2);
+}
+
+@media (max-width: 768px) {
+    .user-box {
+        flex-basis: calc(50% - 10px);
+    }
+}
+
+.home-link::before{
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    content: "";
+}

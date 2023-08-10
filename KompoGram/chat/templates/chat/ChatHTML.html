@@ -5,50 +5,77 @@
     <meta charset="UTF-8">
     <title>Title</title>
     <link rel="stylesheet" href="{% static 'Chat/css/ChatCSS.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 </head>
 <body>
-    <h1>Привіт! {{ user.username }} це чат!</h1>
-    <div id="messageContainer">
-        <form method="POST" action="" id="form" data-isreply="no">
-            {% csrf_token %}
-            <input type="text" name="message" id="form1">
-        </form>
-        <form id="photo_form" enctype="multipart/form-data">
-            <input type="file" id="photoInput">
-            <button type="submit">submit</button>
-        </form>
-    </div>
-    <div id="messages">
-        {% for i in All_Messages %}
-            {% if not i.reply and not i.picture %}
-                <div class="message" data-id="{{ i.id }}" data-message="{{ i.message }}">
-                    <img src="{{ i.created_by.picture.url }}" class="profile_pictures">
-                    <p>від:{{ i.created_by }}: {{ i.message }}</p>
-                    <button class="message__delete">Delete</button>
-                    <button class="message__reply">Reply</button>
+    <div class="container">
+        <div class="content">
+            <div class="left_and_center_div">
+                <div id="messageContainer">
+                    <form method="POST" action="" id="form" data-isreply="no">
+                        {% csrf_token %}
+                        <input type="text" name="message" id="form1">
+                    </form>
+                    <form id="photo_form" enctype="multipart/form-data">
+                        <input type="file" id="photoInput">
+                        <button type="submit">submit</button>
+                    </form>
                 </div>
-            {% elif i.picture %}
-                <div class="message" data-id="{{ i.id }}" data-message="{{ i.message }}">
-                    <img src="{{ i.created_by.picture.url }}" class="profile_pictures">
-                    <p>від:{{ i.created_by }}: </p>
-                    <img src="{{ i.picture.url }}">
-                    <button class="message__delete">Delete</button>
-                    <button class="message__reply">Reply</button>
+                <div class="div_to_reply" id="div_for_reply">
+                    <p id="pre_reply_text">Тут будуть тексти відповідей</p>
                 </div>
-            {% elif i.reply %}
-                <div class="message" data-id="{{ i.id }}" data-message="{{ i.message }}">
-                    <p>Відповідь на: {{ i.reply.message }}</p>
-                    <img src="{{ i.created_by.picture.url }}" class="profile_pictures">
-                    <p>від:{{ i.created_by }}: {{ i.message }}</p>
-                    <button class="message__delete">Delete</button>
-                    <button class="message__reply">Reply</button>
+                <div id="messages">
+                    {% for i in All_Messages %}
+                        {% if not i.reply and not i.picture %}
+                            <div class="message" data-id="{{ i.id }}" data-message="{{ i.message }}">
+                                <img src="{{ i.created_by.picture.url }}" class="profile_pictures">
+                                <div class="message__buttons">
+                                    <p class="text_message">{{ i.created_by }}: {{ i.message }}</p>
+                                    <button class="message__delete">Delete</button>
+                                    <button class="message__reply">Reply</button>
+                                </div>
+                            </div>
+                        {% elif i.picture %}
+                            <div class="message" data-id="{{ i.id }}" data-message="{{ i.message }}">
+                                <img src="{{ i.created_by.picture.url }}" class="profile_pictures">
+                                <div class="message__buttons">
+                                    <p>від:{{ i.created_by }}: </p>
+                                    <img src="{{ i.picture.url }}">
+                                    <button class="message__delete">Delete</button>
+                                    <button class="message__reply">Reply</button>
+                                </div>
+                            </div>
+                        {% elif i.reply %}
+                            <div class="message" data-id="{{ i.id }}" data-message="{{ i.message }}">
+                                <img src="{{ i.created_by.picture.url }}" class="profile_pictures">
+                                <div class="message__buttons">
+                                    <p>Відповідь на: {{ i.reply.message }}</p>
+                                    <p class="text_message">{{ i.created_by }}: {{ i.message }}</p>
+                                    <button class="message__delete">Delete</button>
+                                    <button class="message__reply">Reply</button>
+                                </div>
+                            </div>
+                        {% endif %}
+                    {% endfor %}
                 </div>
-            {% endif %}
-        {% endfor %}
+            </div>
+        </div>
+        <div class="right_div">
+            <a href="{% url 'home' %}" class="home-link"><i class="fas fa-home large-icon"></i></a>
+        </div>
     </div>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 
     <script type="text/javascript">
+        function updateScroll() {
+            console.log("скроллл")
+            setTimeout(function() {
+                console.log("сссссссссссс")
+                var messageContainer = document.getElementsByClassName("left_and_center_div")[0];
+                messageContainer.scrollTop = messageContainer.scrollHeight;
+            }, 0);
+        }
+        updateScroll()
         let URL_USER1 = window.location.href;
         let parts = URL_USER1.split('/');
         let username = parts[parts.length - 1]
@@ -66,47 +93,57 @@
             if (data.type === 'new_message') {
                 let messages = document.getElementById('messages')
                 messages.insertAdjacentHTML('beforeend', `<div class='message' data-id="${data.id}" data-message="${data.message}">
-                                    <p>від:${from_user}: ${data.message}</p>
                                     <img src="${data.picture_profile}" class="profile_pictures">
                                     <input type="hidden" name="message_id" value="${data.id}">
-                                    <button class="message__delete">Delete</button>
-                                    <button class="message__reply">Reply</button>
+                                    <div class='message__buttons'>
+                                        <p class="text_message">${from_user}: ${data.message}</p>
+                                        <button class="message__delete">Delete</button>
+                                        <button class="message__reply">Reply</button>
+                                    </div>
                                 </div>`)
                 on_delete_message()
                 on_reply_message()
+                updateScroll()
             }
             else if (data.type === 'delete_message'){
                 const message_for_delete = document.querySelector(`.message[data-id="${data.message_id}"]`);
                 console.log(message_for_delete)
                 console.log('Шоб удалить')
                 message_for_delete.remove()
+                updateScroll()
             }
             else if (data.type === 'send_message_reply'){
                 let messages = document.getElementById('messages')
                 console.log('yes')
                 messages.insertAdjacentHTML('beforeend', `<div class='message' data-id="${data.id}" data-message="${data.message}">
-                                    <p>Відповідь на:${data.reply_to_message_text}</p>
-                                    <p>від:${from_user}: ${data.message}</p>
                                     <img src="${data.picture_profile}" class="profile_pictures">
-                                    <input type="hidden" name="message_id" value="${data.id}">
-                                    <button class="message__delete">Delete</button>
-                                    <button class="message__reply">Reply</button>
+                                    <div class='message__buttons'>
+                                        <p>Відповідь на:${data.reply_to_message_text}</p>
+                                        <p class='text_message'>${from_user}: ${data.message}</p>
+                                        <input type="hidden" name="message_id" value="${data.id}">
+                                        <button class="message__delete">Delete</button>
+                                        <button class="message__reply">Reply</button>
+                                    </div>
                                 </div>`)
                 on_delete_message()
                 on_reply_message()
+                updateScroll()
             }
             else if (data.type === 'new_photo'){
                 let messages = document.getElementById('messages')
                 messages.insertAdjacentHTML('beforeend', `<div class='message' data-id="${data.id}" data-message="${data.message}">
-                                    <p>від:${from_user}:</p>
-                                    <img src="${data.photo}" alt="none">
                                     <img src="${data.picture_profile}" class="profile_pictures">
-                                    <input type="hidden" name="message_id" value="${data.id}">
-                                    <button class="message__delete">Delete</button>
-                                    <button class="message__reply">Reply</button>
+                                    <div class='message__buttons'>
+                                        <p>від:${from_user}:</p>
+                                        <img src="${data.photo}" alt="none">
+                                        <input type="hidden" name="message_id" value="${data.id}">
+                                        <button class="message__delete">Delete</button>
+                                        <button class="message__reply">Reply</button>
+                                    </div>
                                 </div>`)
                 on_delete_message()
                 on_reply_message()
+                updateScroll()
             }
             let all_messages = document.getElementsByClassName('message__delete')
             console.log(all_messages)
@@ -145,7 +182,6 @@
             reader.readAsDataURL(file);
         })
     </script>
-    
     <script src="{% static 'chat/js/AjaxMessage.js' %}" defer></script>
     <script src="{% static 'chat/js/AjaxDelete.js' %}" defer></script>
     <script src="{% static 'chat/js/AjaxReply.js' %}" defer></script>
