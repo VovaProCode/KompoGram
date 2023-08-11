@@ -81,18 +81,34 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
             message = await create_message_async(chat, message_text, user, reply, picture=None)
 
-            await self.channel_layer.group_send(
-                self.room_group_name,
-                {
-                    'type': 'send_message_reply',
-                    'user': username,
-                    'to_user': to_user.username,
-                    'message': message_text,
-                    'id': message.id,
-                    'picture_profile': message.created_by.picture.url,
-                    'reply_to_message_text': reply.message
-                }
-            )
+            if not reply.message:
+                await self.channel_layer.group_send(
+                    self.room_group_name,
+                    {
+                        'type': 'send_message_reply',
+                        'user': username,
+                        'to_user': to_user.username,
+                        'message': message_text,
+                        'id': message.id,
+                        'picture_profile': message.created_by.picture.url,
+                        'reply_to_message_text': reply.picture.url,
+                        'reply_is_picture': 'yes'
+                    }
+                )
+            else:
+                await self.channel_layer.group_send(
+                    self.room_group_name,
+                    {
+                        'type': 'send_message_reply',
+                        'user': username,
+                        'to_user': to_user.username,
+                        'message': message_text,
+                        'id': message.id,
+                        'picture_profile': message.created_by.picture.url,
+                        'reply_to_message_text': reply.message,
+                        'reply_is_picture': 'no'
+                    }
+                )
         elif event_type == 'delete_message':
             message_id = text_data_json['message_id']
             await delete_message_async(message_id)
@@ -216,6 +232,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
         id = event['id']
         picture_profile = event['picture_profile']
         reply = event['reply_to_message_text']
+        is_picture = event['reply_is_picture']
 
         await self.send(text_data=json.dumps({
             'type': 'send_message_reply',
@@ -224,7 +241,8 @@ class ChatConsumer(AsyncWebsocketConsumer):
             'message': message_text,
             'id': id,
             'picture_profile': picture_profile,
-            'reply_to_message_text': reply
+            'reply_to_message_text': reply,
+            'reply_is_picture': is_picture
         }))
 
     async def new_photo(self, event):

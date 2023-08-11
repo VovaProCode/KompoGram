@@ -12,7 +12,7 @@
         <div class="content">
             <div class="left_and_center_div">
                 <div id="messageContainer">
-                    <form method="POST" action="" id="form" data-isreply="no">
+                    <form method="POST" action="" id="form" data-isreply="no" class="form_messages">
                         {% csrf_token %}
                         <input type="text" name="message" id="form1">
                     </form>
@@ -93,7 +93,7 @@
             setTimeout(function() {
                 var messageContainer = document.getElementsByClassName("left_and_center_div")[0];
                 messageContainer.scrollTop = messageContainer.scrollHeight;
-            }, 0);
+            }, 1000);
         }
         updateScroll()
         let URL_USER1 = window.location.href;
@@ -107,7 +107,6 @@
 
         chatSocket.onmessage = function(e){
             let data = JSON.parse(e.data)
-            console.log(username)
             let from_user = data.user;
             if (data.type === 'new_message') {
                 let messages = document.getElementById('messages')
@@ -134,7 +133,21 @@
             else if (data.type === 'send_message_reply'){
                 let messages = document.getElementById('messages')
                 console.log('yes')
-                messages.insertAdjacentHTML('beforeend', `<div class='message' data-id="${data.id}" data-message="${data.message}">
+                if (data.reply_is_picture === 'yes'){
+                    messages.insertAdjacentHTML('beforeend', `<div class='message' data-id="${data.id}" data-message="${data.message}">
+                                    <img src="${data.picture_profile}" class="profile_pictures">
+                                    <div class='message__buttons'>
+                                        <p>Відповідь на:</p>
+                                        <img src="${data.reply_to_message_text}" alt="Meni poxyi">
+                                        <p class='text_message'>${from_user}: ${data.message}</p>
+                                        <input type="hidden" name="message_id" value="${data.id}">
+                                        <button class="message__delete">Delete</button>
+                                        <button class="message__reply">Reply</button>
+                                    </div>
+                                </div>`)
+                }
+                else{
+                    messages.insertAdjacentHTML('beforeend', `<div class='message' data-id="${data.id}" data-message="${data.message}">
                                     <img src="${data.picture_profile}" class="profile_pictures">
                                     <div class='message__buttons'>
                                         <p>Відповідь на:${data.reply_to_message_text}</p>
@@ -144,6 +157,8 @@
                                         <button class="message__reply">Reply</button>
                                     </div>
                                 </div>`)
+                }
+
                 on_delete_message()
                 on_reply_message()
                 updateScroll()
@@ -197,17 +212,13 @@
                 on_reply_message()
                 updateScroll()
             }
-            let all_messages = document.getElementsByClassName('message__delete')
-            console.log(all_messages)
         }
 
         let form = document.getElementById('form')
         form.addEventListener('submit', (e) => {
             if (form.dataset.isreply === 'no'){
-                console.log("уррааааааа")
                 e.preventDefault()
                 let message = e.target.message.value;
-                console.log(message)
                 chatSocket.send(JSON.stringify({
                     'message': message,
                     'type': 'send_message'
@@ -221,7 +232,6 @@
             if (photo_form.dataset.isreply === 'no'){
                 e.preventDefault()
                 let file = photoInput.files[0];
-                console.log("eeeeee")
                 let reader = new FileReader();
                 reader.onload = function(event) {
                     console.log('bbbb')

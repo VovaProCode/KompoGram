@@ -1,6 +1,7 @@
 function on_reply_message() {
-    console.log('--------------')
     $('.message__reply').off()
+    $('.form_messages').off('submit');
+    $('#photo_form').off('submit');
     $('.message__reply').on("click", function(event) {
         console.log('+Reply!')
         var message_obj = this.parentNode.parentNode;
@@ -20,12 +21,12 @@ function on_reply_message() {
         text_message_before_form.textContent = text_message
         div_message.appendChild(text_message_before_form)
         console.log('Месадже id', message_id)
-        form.addEventListener('submit', (e) => {
+        $('#form').on('submit', function(event){
             console.log(message_id)
             if (form.dataset.isreply === 'yes'){
                 console.log(message_id)
-                e.preventDefault()
-                let message = e.target.message.value
+                event.preventDefault()
+                let message = event.target.message.value
                 chatSocket.send(JSON.stringify({
                     'message_text': message,
                     'type': 'new_message_reply',
@@ -42,9 +43,9 @@ function on_reply_message() {
                 div_message.appendChild(default_text)
             }
         })
-        photo_form.addEventListener('submit', (e) => {
+        $('#photo_form').on('submit', function(event){
             if (photo_form.dataset.isreply === 'yes'){
-                e.preventDefault()
+                event.preventDefault()
                 let photoInput = document.getElementById('photoInput');
                 let file = photoInput.files[0];
                 let reader = new FileReader();
