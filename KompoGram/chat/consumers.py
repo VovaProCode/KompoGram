@@ -136,6 +136,56 @@ class ChatConsumer(AsyncWebsocketConsumer):
                     'picture_profile': message.created_by.picture.url
                 }
             )
+
+        elif event_type == 'new_message_reply_picture':
+            photo = text_data_json['photo_reply']
+            format, imgstr = photo.split(';base64,')
+            ext = format.split('/')[-1]
+            data = ContentFile(base64.b64decode(imgstr), name='temp.' + ext)
+            reply_message_id = text_data_json['to_reply']
+            reply = await get_messages_by_id_async(reply_message_id)
+            user = self.scope['user']
+            username = user.username
+            first_user_id, second_user_id = await self.get_to_user_from_url()
+            if first_user_id == user.id:
+                to_user_id = second_user_id
+            else:
+                to_user_id = first_user_id
+            to_user = await get_user_by_id_async(to_user_id)
+            friends = await get_user_friend_async(user, to_user)
+            chat = await get_chat_async(friends)
+
+            message = await create_message_async(chat, message=None, created_by=user, reply=reply, picture=data)
+
+            if not reply.message:
+                await self.channel_layer.group_send(
+                    self.room_group_name,
+                    {
+                        'type': 'send_message_reply_picture',
+                        'user': username,
+                        'to_user': to_user.username,
+                        'photo': message.picture.url,
+                        'id': message.id,
+                        'picture_profile': message.created_by.picture.url,
+                        'reply_to_message_text': reply.picture.url,
+                        'reply_is_picture': 'yes'
+                    }
+                )
+            else:
+                await self.channel_layer.group_send(
+                    self.room_group_name,
+                    {
+                        'type': 'send_message_reply_picture',
+                        'user': username,
+                        'to_user': to_user.username,
+                        'photo': message.picture.url,
+                        'id': message.id,
+                        'picture_profile': message.created_by.picture.url,
+                        'reply_to_message_text': reply.message,
+                        'reply_is_picture': 'no'
+                    }
+                )
+
     async def new_message(self, event):
         user = event['user']
         to_user = event['to_user']
@@ -195,6 +245,25 @@ class ChatConsumer(AsyncWebsocketConsumer):
             'picture_profile': picture_profile,
             'height': height,
             'width': width,
+        }))
+    async def send_message_reply_picture(self, event):
+        user = event['user']
+        to_user = event['to_user']
+        photo = event['photo']
+        id = event['id']
+        picture_profile = event['picture_profile']
+        reply = event['reply_to_message_text']
+        reply_is_picture = event['reply_is_picture']
+
+        await self.send(text_data=json.dumps({
+            'type': 'send_message_reply_picture',
+            'user': user,
+            'to_user': to_user,
+            'photo': photo,
+            'id': id,
+            'picture_profile': picture_profile,
+            'reply_to_message_text': reply,
+            'reply_is_picture': reply_is_picture,
         }))
 
     async def get_to_user_from_url(self):
