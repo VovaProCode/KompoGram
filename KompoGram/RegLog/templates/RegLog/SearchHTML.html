@@ -29,5 +29,37 @@
             <a href="{% url 'home' %}" class="home-link"><i class="fas fa-home large-icon"></i></a>
         </div>
     </div>
+    <script>
+        room_name = {{ home_name_json }}
+
+        let url = `ws://${window.location.host}/ws/home/${room_name}/`
+
+        const chatSocket = new WebSocket(url)
+
+        chatSocket.onmessage = function(e){
+            let data = JSON.parse(e.data)
+            let from_user = data.user;
+            if (data.type === 'add_new_message_offline'){
+                console.log('ну да')
+                console.log(data.from_user)
+                if (Notification.permission !== 'granted') {
+                    console.log('нетттт')
+                    Notification.requestPermission().then(function(permission) {
+                        if (permission === 'granted') {
+                            // Разрешение получено, создаем уведомление
+                            new Notification(data.from_user, {
+                                body: data.message
+                            });
+                        }
+                    });
+                } else {
+                    // Разрешение уже есть, создаем уведомление
+                    new Notification(data.from_user, {
+                        body: data.message
+                    });
+                }
+            }
+        }
+    </script>
 </body>
 </html>

@@ -26,6 +26,11 @@ body {
 .welcome-title {
     text-align: center;
     font-size: 32px;
+    margin-bottom: -10px;
+}
+.info-title{
+    text-align: center;
+    font-size: 15px;
     margin-bottom: 20px;
 }
 
@@ -154,4 +159,13 @@ body {
 /* При активации кнопки */
 .logout-link:active {
     background-color: #ac2925; /* Ещё более темный цвет при активации */
+}
+.password-input{
+    width: 35%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 14px;
+    color: #333;
 }

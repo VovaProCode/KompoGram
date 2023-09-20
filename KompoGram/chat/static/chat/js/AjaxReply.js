@@ -3,9 +3,7 @@ function on_reply_message() {
     $('.form_messages').off('submit');
     $('#photo_form').off('submit');
     $('.message__reply').on("click", function(event) {
-        console.log('+Reply!')
         var message_obj = this.parentNode.parentNode;
-        console.log(message_obj)
         var message_id = message_obj.dataset.id
         var text_message = message_obj.dataset.message
         var form1 = document.getElementById('form1')
@@ -20,11 +18,8 @@ function on_reply_message() {
         const text_message_before_form = document.createElement('p');
         text_message_before_form.textContent = text_message
         div_message.appendChild(text_message_before_form)
-        console.log('Месадже id', message_id)
         $('#form').on('submit', function(event){
-            console.log(message_id)
             if (form.dataset.isreply === 'yes'){
-                console.log(message_id)
                 event.preventDefault()
                 let message = event.target.message.value
                 chatSocket.send(JSON.stringify({
@@ -32,6 +27,7 @@ function on_reply_message() {
                     'type': 'new_message_reply',
                     'to_reply': message_obj.dataset.id
                 }))
+                send_homee(message)
                 form.reset()
                 form1.setAttribute('placeholder', '')
                 form.setAttribute('data-isreply', 'no')
@@ -56,6 +52,7 @@ function on_reply_message() {
                         'type': 'new_message_reply_picture',
                         'to_reply': message_obj.dataset.id
                     }))
+                    send_homee('фотографія')
                 }
                 photo_form.reset()
                 reader.readAsDataURL(file);
@@ -72,5 +69,10 @@ function on_reply_message() {
         })
     });
 };
-
+function send_homee(message){
+    homeSocket.send(JSON.stringify({
+        'type': 'new_message?',
+        'message': message,
+    }))
+}
 on_reply_message()

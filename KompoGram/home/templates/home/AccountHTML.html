@@ -12,13 +12,18 @@
     <div class="container">
         <div class="left_and_center_div">
             <h1 class="welcome-title">Вітаємо в особистому кабінеті!</h1>
-            <form action="{% url 'change-name' %}" method="POST" enctype="multipart/form-data" class="form">
+            <p class="info-title">Якщо не хочете міняти якийсь параметр то не заповнюйте його</p>
+            <form action="" method="POST" enctype="multipart/form-data" class="form">
                 {% csrf_token %}
                 <p class="username">{{ user.username }}</p>
-                <input type="text" class="name-input" placeholder="Змінити ім'я" name="new_name" value="{{ user.username }}">
+                <input type="text" class="name-input" placeholder="Змінити ім'я" name="new_name">
                 <h1>Теперішнє фото профіля:</h1>
                 <img src="{{ user.picture.url }}" alt="Profile Picture" class="profile-picture">
                 <input type="file" class="picture-input" name="new_picture" value="Виберіть файл">
+                <h1>Змінити пароль:</h1>
+                <input type="password" name="old_password" class="password-input" placeholder="Теперішній пароль">
+                <input type="password" name="new_password" class="password-input" placeholder="Новий пароль">
+                <input type="password" name="new_password_confirm" class="password-input" placeholder="Підтвердіть новий пароль">
                 <input type="submit" value="Обновити профіль">
                 <a href="{% url 'logout' %}" class="logout-link">Вийти</a>
                 <p class="error-message">{{ error }}</p>
@@ -28,5 +33,37 @@
             <a href="{% url 'home' %}" class="home-link"><i class="fas fa-home large-icon"></i></a>
         </div>
     </div>
+    <script>
+        room_name = {{ home_name_json }}
+
+        let url = `ws://${window.location.host}/ws/home/${room_name}/`
+
+        const chatSocket = new WebSocket(url)
+
+        chatSocket.onmessage = function(e){
+            let data = JSON.parse(e.data)
+            let from_user = data.user;
+            if (data.type === 'add_new_message_offline'){
+                console.log('ну да')
+                console.log(data.from_user)
+                if (Notification.permission !== 'granted') {
+                    console.log('нетттт')
+                    Notification.requestPermission().then(function(permission) {
+                        if (permission === 'granted') {
+                            // Разрешение получено, создаем уведомление
+                            new Notification(data.from_user, {
+                                body: data.message
+                            });
+                        }
+                    });
+                } else {
+                    // Разрешение уже есть, создаем уведомление
+                    new Notification(data.from_user, {
+                        body: data.message
+                    });
+                }
+            }
+        }
+    </script>
 </body>
 </html>

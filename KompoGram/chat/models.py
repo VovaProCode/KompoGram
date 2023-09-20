@@ -11,6 +11,8 @@ import base64
 
 class Chat(models.Model):
     friends = models.ForeignKey(Friends, on_delete=models.CASCADE)
+    user1_is_online = models.BooleanField('Перший юзер онлайн?', null=True, blank=True, default=False)
+    user2_is_online = models.BooleanField('Другий юзер онлайн?', null=True, blank=True, default=False)
 
     def get_name_room(self):
         return f'{self.friends.first_user.id}_{self.friends.second_user.id}'
@@ -29,6 +31,7 @@ class Messages(models.Model):
     created_by = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
     reply = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True)
     picture = models.ImageField('Картинка повідомлення', upload_to=image_upload_path, null=True, blank=True)
+    video = models.FileField('Відео', upload_to=image_upload_path, null=True, blank=True)
 
     def __str__(self):
         if self.message != None:

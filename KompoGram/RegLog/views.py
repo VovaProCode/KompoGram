@@ -1,3 +1,4 @@
+import json
 import os
 
 from django.conf import settings
@@ -5,6 +6,8 @@ from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
+from django.utils.safestring import mark_safe
+
 from .models import CustomUser, FriendRequest
 from .serives.friends import add_friend
 from django.core.files import File
@@ -24,7 +27,9 @@ def RegistrationPage(request):
         if password1 != password2:
             return redirect('home')
         else:
-            user = authenticate(request, username=username, password=password1, picture=picture)
+            user = CustomUser.objects.create_user(username=username, email=email, password=password1, picture=picture)
+            user.save()
+            user = authenticate(request, username=username, password=password1)
             login(request, user)
             return redirect('home')
 
@@ -53,7 +58,9 @@ def SearchUsers(request):
         searched = request.POST["searched"]
         users = CustomUser.objects.filter(username__icontains=searched).exclude(username=request.user.username).exclude(username='admin')
         print(users)
-        context = {"users": users}
+        user = request.user
+        context = {"users": users,
+                   'home_name_json': mark_safe(json.dumps(f'_{user.id}_'))}
         return render(request, 'RegLog/SearchHTML.html', context)
     elif "term" in request.GET:
         users = User.objects.filter(username__icontains=request.GET.get('term'))
@@ -62,7 +69,9 @@ def SearchUsers(request):
             UsersList.append(i)
         return JsonResponse(UsersList, safe=False)
     else:
-        return render(request, "RegLog/SearchHTML.html")
+        user = request.user
+        context = {'home_name_json': mark_safe(json.dumps(f'_{user.id}_'))}
+        return render(request, "RegLog/SearchHTML.html", context)
 
 def SendRequest(request, id):
     from_user = request.user

@@ -1,20 +1,27 @@
 import base64
 import json
-
 from django.core.files.base import ContentFile
-
 from asgiref.sync import sync_to_async
 from channels.generic.websocket import AsyncWebsocketConsumer
-
-from RegLog.selectors.users import get_user_by_id, get_user_by_id_async
-from RegLog.serives.friends import get_user_friend, get_user_friend_async
+from RegLog.selectors.users import get_user_by_id_async
+from RegLog.serives.friends import get_user_friend_async
 from .models import Messages
-from .selectors.chat import get_chat, get_chat_async
-from .services.message import create_message, create_message_async, delete_message_async, get_messages_by_id_async
+from .selectors.chat import get_chat_async, chat_online_async, chat_offline_async
+from chat.services.message import create_message_async, delete_message_async, get_messages_by_id_async
 
 
 class ChatConsumer(AsyncWebsocketConsumer):
     async def connect(self):
+        user = self.scope['user']
+        first_user_id, second_user_id = await self.get_to_user_from_url()
+        if first_user_id == user.id:
+            to_user_id = second_user_id
+        else:
+            to_user_id = first_user_id
+        to_user = await get_user_by_id_async(to_user_id)
+        friends = await get_user_friend_async(user, to_user)
+        await chat_online_async(friends, user, to_user)
+        chat = await get_chat_async(friends)
         self.room_name = self.scope['url_route']['kwargs']['room_name']
         self.room_group_name = 'chat_%s' % self.room_name
 
@@ -26,6 +33,19 @@ class ChatConsumer(AsyncWebsocketConsumer):
         await self.accept()
 
     async def disconnect(self, close_code):
+        print('dissss')
+        user = self.scope['user']
+        first_user_id, second_user_id = await self.get_to_user_from_url()
+        if first_user_id == user.id:
+            to_user_id = second_user_id
+        else:
+            to_user_id = first_user_id
+        to_user = await get_user_by_id_async(to_user_id)
+        friends = await get_user_friend_async(user, to_user)
+        await chat_offline_async(friends, user, to_user)
+        chat = await get_chat_async(friends)
+        print(chat.user1_is_online)
+        print(chat.user2_is_online)
         await self.channel_layer.group_discard(
             self.room_group_name,
             self.channel_name
@@ -47,7 +67,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
             friends = await get_user_friend_async(user, to_user)
             chat = await get_chat_async(friends)
 
-            message = await create_message_async(chat, message_text, user, reply=None, picture=None)
+            message = await create_message_async(chat, message_text, user, reply=None, picture=None, video=None)
 
             await self.channel_layer.group_send(
                 self.room_group_name,
@@ -79,7 +99,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
             friends = await get_user_friend_async(user, to_user)
             chat = await get_chat_async(friends)
 
-            message = await create_message_async(chat, message_text, user, reply, picture=None)
+            message = await create_message_async(chat, message_text, user, reply, picture=None, video=None)
 
             if not reply.message:
                 await self.channel_layer.group_send(
@@ -121,10 +141,9 @@ class ChatConsumer(AsyncWebsocketConsumer):
             )
 
         elif event_type == 'send_photo':
-            print("BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB")
             photo = text_data_json['photo']
-            format, imgstr = photo.split(';base64,') 
-            ext = format.split('/')[-1] 
+            format, imgstr = photo.split(';base64,')
+            ext = format.split('/')[-1]
             data = ContentFile(base64.b64decode(imgstr), name='temp.' + ext)
             user = self.scope['user']
             username = user.username
@@ -136,22 +155,38 @@ class ChatConsumer(AsyncWebsocketConsumer):
             to_user = await get_user_by_id_async(to_user_id)
             friends = await get_user_friend_async(user, to_user)
             chat = await get_chat_async(friends)
+            if ext == 'mp4':
+                message = await create_message_async(chat, message=None, created_by=user, reply=None, picture=None,
+                                                     video=data)
 
-            message = await create_message_async(chat, message=None, created_by=user, reply=None, picture=data)
+                await self.channel_layer.group_send(
+                    self.room_group_name,
+                    {
+                        'type': 'new_photo',
+                        'user': username,
+                        'to_user': to_user.username,
+                        'photo': message.video.url,
+                        'id': message.id,
+                        'picture_profile': message.created_by.picture.url,
+                        'is_video': 'yes'
+                    }
+                )
+            else:
+                message = await create_message_async(chat, message=None, created_by=user, reply=None, picture=data,
+                                                     video=None)
 
-            await self.channel_layer.group_send(
-                self.room_group_name,
-                {
-                    'type': 'new_photo',
-                    'user': username,
-                    'to_user': to_user.username,
-                    'photo': message.picture.url,
-                    'width': message.picture.width,
-                    'height': message.picture.height,
-                    'id': message.id,
-                    'picture_profile': message.created_by.picture.url
-                }
-            )
+                await self.channel_layer.group_send(
+                    self.room_group_name,
+                    {
+                        'type': 'new_photo',
+                        'user': username,
+                        'to_user': to_user.username,
+                        'photo': message.picture.url,
+                        'id': message.id,
+                        'picture_profile': message.created_by.picture.url,
+                        'is_video': 'no'
+                    }
+                )
 
         elif event_type == 'new_message_reply_picture':
             photo = text_data_json['photo_reply']
@@ -171,7 +206,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
             friends = await get_user_friend_async(user, to_user)
             chat = await get_chat_async(friends)
 
-            message = await create_message_async(chat, message=None, created_by=user, reply=reply, picture=data)
+            message = await create_message_async(chat, message=None, created_by=user, reply=reply, picture=data, video=None)
 
             if not reply.message:
                 await self.channel_layer.group_send(
@@ -251,8 +286,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
         photo = event['photo']
         id = event['id']
         picture_profile = event['picture_profile']
-        width = event['width']
-        height = event['height']
+        is_photo = event['is_video']
 
         await self.send(text_data=json.dumps({
             'type': 'new_photo',
@@ -261,8 +295,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
             'photo': photo,
             'id': id,
             'picture_profile': picture_profile,
-            'height': height,
-            'width': width,
+            'is_photo': is_photo
         }))
     async def send_message_reply_picture(self, event):
         user = event['user']
@@ -286,9 +319,11 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
     async def get_to_user_from_url(self):
         path = self.scope['path']
+        print(path)
         parts = path.split('/')
         temp = parts[-2].split('_')
         temp = list(map(int, temp))
+        print(temp)
         return temp
 
     @sync_to_async
@@ -296,3 +331,74 @@ class ChatConsumer(AsyncWebsocketConsumer):
         id_message = Messages.objects.count()
         count = id_message + 1
         return count
+
+class HomeConsumer(AsyncWebsocketConsumer):
+    async def connect(self):
+        self.room_name = self.scope['url_route']['kwargs']['home_name']
+        self.room_group_name = 'chat_%s' % self.room_name
+
+        await self.channel_layer.group_add(
+            self.room_group_name,
+            self.channel_name
+        )
+
+        await self.accept()
+
+    async def disconnect(self, close_code):
+        await self.channel_layer.group_discard(
+            self.room_group_name,
+            self.channel_name
+        )
+
+    async def receive(self, text_data):
+        # Обработка данных от клиента
+        text_data_json = json.loads(text_data)
+        event_type = text_data_json['type']
+        if event_type == 'new_message?':
+            user = self.scope['user']
+            message = text_data_json['message']
+            to_user_offline = await self.get_to_user_from_url()
+            to_user = await get_user_by_id_async(to_user_offline)
+            friends = await get_user_friend_async(user, to_user)
+            chat = await get_chat_async(friends)
+            print(chat.user1_is_online)
+            print(chat.user2_is_online)
+            if to_user_offline > user.id:
+                if not chat.user2_is_online:
+                    print('дааааааа')
+                    await self.channel_layer.group_send(
+                        self.room_group_name,
+                        {
+                            'type': 'add_new_message_offline',
+                            'from_user': user.username,
+                            'message': message
+                        }
+                    )
+            else:
+                if not chat.user1_is_online:
+                    print('дааааааа')
+                    await self.channel_layer.group_send(
+                        self.room_group_name,
+                        {
+                            'type': 'add_new_message_offline',
+                            'from_user': user.username,
+                            'message': message
+                        }
+                    )
+
+    async def add_new_message_offline(self, event):
+        typee = event['type']
+        from_user = event['from_user']
+        message = event['message']
+        await self.send(text_data=json.dumps({
+            'type': typee,
+            'from_user': from_user,
+            'message': message
+        }))
+
+    async def get_to_user_from_url(self):
+        path = self.scope['path']
+        parts = path.split('/')
+        temp = parts[-2].split('_')
+        temp = temp[1]
+        return int(temp)

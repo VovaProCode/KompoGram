@@ -147,3 +147,233 @@ body {
     margin-bottom: 400px;
     margin-right: 20px;
 }
+
+.player{
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-inline: auto;
+    background-color: black;
+    width: 1236px;
+}
+video{
+    width: 100%;
+}
+.controls_div{
+    position: absolute;
+    right: 0;
+    left: 0;
+    bottom: 0;
+    color: white;
+    z-index: 100;
+    opacity: 0;
+    transition: opacity 150ms ease-in-out;
+}
+.player:hover .controls_div,
+.player:focus-within .controls_div,
+.player.paused .controls_div{
+    opacity: 1;
+}
+.controls_div .controls{
+    display: flex;
+    gap: .5rem;
+    padding: .25rem;
+    align-items: center;
+}
+.controls_div .controls button{
+    background: none;
+    border: none;
+    color: inherit;
+    padding: 0;
+    height: 30px;
+    width: 30px;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: opacity 150ms ease-in-out;
+}
+.controls_div .controls:hover{
+    opacity: 1;
+}
+.player.paused .pause-icon{
+    display: none;
+}
+.player:not(.paused) .play-icon{
+    display: none;
+}
+.controls_div::before{
+    content: "";
+    position: absolute;
+    bottom: 0;
+    background: linear-gradient(to top , rgba(0, 0, 0, .75), transparent);
+    width: 100%;
+    aspect-ratio: 6 / 1;
+    z-index: -1;
+    pointer-events: none;
+}
+.player.full_screeen {
+    max-width: initial;
+    width: 100%;
+}
+.player.full_screeen{
+    max-height: 100vh;
+}
+.player.full_screeen .open{
+    display: none;
+}
+.player:not(.full_screeen) .close{
+    display: none;
+}
+.volume-high-icon,
+.volume-low-icon,
+.volume-muted-icon{
+    display: none;
+}
+.player[data-volumelevel="high"] .volume-high-icon{
+    display: block;
+}
+.player[data-volumelevel="low"] .volume-low-icon{
+    display: block;
+}
+.player[data-volumelevel="muted"] .volume-muted-icon{
+    display: block;
+}
+.volume_div{
+    display: flex;
+    align-items: center;
+}
+.volume_range{
+    width: 0;
+    transform-origin: left;
+    transform: scaleX(0);
+    transition: width 150ms ease-in-out, transform 150ms ease-in-out;
+}
+.volume_div:hover .volume_range,
+.volume_range:focus-within {
+    width: 100px;
+    transform: scaleX(1);
+}
+.duration_div{
+    display: flex;
+    align-items: center;
+    gap: .25rem;
+    flex-grow: 1;
+    font-family: Arial;
+}
+.player.subtitles .subtitres{
+    border-bottom: 3px solid red;
+}
+.controls_div .controls button.wide-btn{
+    width: 50px;
+}
+.timeline_div{
+    height: 7px;
+    margin-inline: .5rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+}
+.timeline_div:hover .timeline{
+    height: 120%;
+}
+.timeline{
+    background-color: rgba(100, 100, 100, .5);
+    height: 4px;
+    width: 100%;
+    position: relative;
+}
+.timeline::before{
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    right: calc(100% - var(--preview-position) * 100%);
+    background-color: rgba(150, 150, 150);
+    display: none;
+}
+.timeline::after{
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    right: calc(100% - var(--progress-position) * 100%);
+    background-color: cyan;
+}
+.timeline .thumb_indicator{
+    --scale: 0;
+    position: absolute;
+    transform: translateX(-50%) scale(var(--scale));
+    height: 200%;
+    top: -50%;
+    left: calc(var(--progress-position) * 100%);
+    background-color: cyan;
+    border-radius: 50%;
+    transition: transform 125ms ease-in-out;
+    aspect-ratio: 1 / 1;
+}
+.timeline .preview-time{
+    position: absolute;
+    background-color: black;
+    aspect-ratio: 16 / 9;
+    top: -5px;
+    transform: translate(-50%, -100%);
+    left: calc(var(--preview-position) * 100%);
+    display: none;
+}
+.thumbnail_img{
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    height: 100%;
+    display: none;
+}
+.player.scrubbing .preview-time,
+.timeline_div:hover .preview-time {
+    display: block;
+}
+
+.series{
+    margin-left: 334px;
+}
+
+.series button{
+    width: 8%;
+    height: 35px;
+    margin-bottom: 10px;
+    background-color: gray;
+    color: white;
+    border: 3px solid black;
+}
+.series button:hover{
+    color: black;
+    cursor: pointer;
+}
+.about_me{
+    font-family: Arial;
+    color: white;
+    height: 800px;
+    display: flex;
+    align-items: end;
+}
+.about_me_black{
+    display: flex;
+    justify-content: center;
+    height: 80px;
+    background-color: black;
+    width: 100%;
+    align-items: center;
+}
+.Logo{
+    margin-right: 200px;
+}
+.numbers{
+    display: block;
+    margin-left: 200px;
+}

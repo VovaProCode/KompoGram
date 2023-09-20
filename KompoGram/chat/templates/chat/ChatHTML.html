@@ -26,7 +26,7 @@
                 </div>
                 <div id="messages">
                     {% for i in All_Messages %}
-                        {% if not i.reply and not i.picture %}
+                        {% if not i.reply and not i.picture and not i.video%}
                             <div class="message" data-id="{{ i.id }}" data-message="{{ i.message }}">
                                 <img src="{{ i.created_by.picture.url }}" class="profile_pictures">
                                 <div class="message__buttons">
@@ -35,7 +35,7 @@
                                     <button class="message__reply">Reply</button>
                                 </div>
                             </div>
-                        {% elif i.picture and not i.reply %}
+                        {% elif i.picture and not i.reply and not i.video %}
                             <div class="message" data-id="{{ i.id }}" data-message="{{ i.picture.url }}">
                                 <img src="{{ i.created_by.picture.url }}" class="profile_pictures">
                                 <div class="message__buttons">
@@ -45,7 +45,7 @@
                                     <button class="message__reply">Reply</button>
                                 </div>
                             </div>
-                        {% elif i.reply and not i.picture %}
+                        {% elif i.reply and not i.picture and not i.video %}
                             <div class="message" data-id="{{ i.id }}" data-message="{{ i.message }}">
                                 <img src="{{ i.created_by.picture.url }}" class="profile_pictures">
                                 <div class="message__buttons">
@@ -61,7 +61,7 @@
                                 </div>
                             </div>
 
-                        {% elif i.reply and i.picture %}
+                        {% elif i.reply and i.picture and not i.video%}
                             <div class="message" data-id="{{ i.id }}" data-message="{{ i.picture.url }}">
                                 <img src="{{ i.created_by.picture.url }}" class="profile_pictures">
                                 <div class="message__buttons">
@@ -77,6 +77,86 @@
                                     <button class="message__reply">Reply</button>
                                 </div>
                             </div>
+
+                        {% elif i.video and not i.picture and not i.reply %}
+                            <div class="message" data-id="{{ i.id }}" data-message="{{ i.video.url }}">
+                                <img src="{{ i.created_by.picture.url }}" class="profile_pictures">
+                                <div class="message__buttons">
+                                    <p>від:{{ i.created_by }}: </p>
+                                    <div class="player paused" data-volumelevel="high">
+                                        <div class="thumbnail_img">
+
+                                        </div>
+                                        <div class="controls_div">
+                                            <div class="timeline_div">
+                                                <div class="timeline">
+                                                    <p class="preview-time">dasdasd</p>
+                                                    <div class="thumb_indicator"></div>
+                                                </div>
+                                            </div>
+                                                <div class="controls">
+                                                <div class="play-pause">
+                                                    <button class="play-pause_button">
+                                                        <svg class="play-icon" viewBox="0 0 24 24">
+                                                            <path fill="currentColor" d="M8,5.14V19.14L19,12.14L8,5.14Z" />
+                                                        </svg>
+                                                        <svg class="pause-icon" viewBox="0 0 24 24">
+                                                            <path fill="currentColor" d="M14,19H18V5H14M6,19H10V5H6V19Z" />
+                                                        </svg>
+                                                    </button>
+                                                </div>
+                                                <div class="volume_div">
+                                                    <button class="volume">
+                                                        <svg class="volume-high-icon" viewBox="0 0 24 24">
+                                                        <path fill="currentColor" d="M14,3.23V5.29C16.89,6.15 19,8.83 19,12C19,15.17 16.89,17.84 14,18.7V20.77C18,19.86 21,16.28 21,12C21,7.72 18,4.14 14,3.23M16.5,12C16.5,10.23 15.5,8.71 14,7.97V16C15.5,15.29 16.5,13.76 16.5,12M3,9V15H7L12,20V4L7,9H3Z" />
+                                                        </svg>
+                                                        <svg class="volume-low-icon" viewBox="0 0 24 24">
+                                                        <path fill="currentColor" d="M5,9V15H9L14,20V4L9,9M18.5,12C18.5,10.23 17.5,8.71 16,7.97V16C17.5,15.29 18.5,13.76 18.5,12Z" />
+                                                        </svg>
+                                                        <svg class="volume-muted-icon" viewBox="0 0 24 24">
+                                                        <path fill="currentColor" d="M12,4L9.91,6.09L12,8.18M4.27,3L3,4.27L7.73,9H3V15H7L12,20V13.27L16.25,17.53C15.58,18.04 14.83,18.46 14,18.7V20.77C15.38,20.45 16.63,19.82 17.68,18.96L19.73,21L21,19.73L12,10.73M19,12C19,12.94 18.8,13.82 18.46,14.64L19.97,16.15C20.62,14.91 21,13.5 21,12C21,7.72 18,4.14 14,3.23V5.29C16.89,6.15 19,8.83 19,12M16.5,12C16.5,10.23 15.5,8.71 14,7.97V10.18L16.45,12.63C16.5,12.43 16.5,12.21 16.5,12Z" />
+                                                        </svg>
+                                                    </button>
+                                                    <input class="volume_range" type="range" min="0" max="1" step="any" value="1">
+                                                </div>
+                                                <div class="duration_div">
+                                                    <div class="start_time">0:00</div>
+                                                    /
+                                                    <div class="end_time"></div>
+                                                </div>
+                                                <button class="speed wide-btn">
+                                                    1x
+                                                </button>
+                                                <button class="mini_player">
+                                                    <svg viewBox="0 0 24 24">
+                                                        <path fill="currentColor" d="M21 3H3c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H3V5h18v14zm-10-7h9v6h-9z"/>
+                                                    </svg>
+                                                </button>
+                                                <button class="full_screen">
+                                                    <svg class="open" viewBox="0 0 24 24">
+                                                        <path fill="currentColor" d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/>
+                                                    </svg>
+                                                    <svg class="close" viewBox="0 0 24 24">
+                                                        <path fill="currentColor" d="M5 16h3v3h2v-5H5v2zm3-8H5v2h5V5H8v3zm6 11h2v-3h3v-2h-5v5zm2-11V5h-2v5h5V8h-3z"/>
+                                                    </svg>
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <video
+                                            id="my-video"
+                                            class="video-js"
+                                            preload="auto"
+                                            data-setup="{}"
+                                        >
+
+                                            <source src="{% url 'stream_video' i.id %}" type="video/mp4"/>
+                                        </video>
+                                    </div>
+                                    <button class="message__delete">Delete</button>
+                                    <button class="message__reply">Reply</button>
+                                </div>
+                            </div>
+
                         {% endif %}
                     {% endfor %}
                 </div>
@@ -93,17 +173,34 @@
             setTimeout(function() {
                 var messageContainer = document.getElementsByClassName("left_and_center_div")[0];
                 messageContainer.scrollTop = messageContainer.scrollHeight;
-            }, 1000);
+            }, 0);
         }
         updateScroll()
         let URL_USER1 = window.location.href;
         let parts = URL_USER1.split('/');
         let username = parts[parts.length - 1]
         room_name = {{ room_name_json }}
+        home_name = {{ home_name_json }}
+        my_name = {{ my_name_json }}
 
         let url = `ws://${window.location.host}/ws/chat/${room_name}/`
 
+        let home_url = `ws://${window.location.host}/ws/home/${home_name}/`
+
+        let my_url = `ws://${window.location.host}/ws/home/${my_name}/`
+
         const chatSocket = new WebSocket(url)
+
+        const homeSocket = new WebSocket(home_url)
+
+        const mySocket = new WebSocket(my_url)
+        function send_home(message){
+            console.log('функция є')
+            homeSocket.send(JSON.stringify({
+                'type': 'new_message?',
+                'message': message,
+            }))
+        }
 
         chatSocket.onmessage = function(e){
             let data = JSON.parse(e.data)
@@ -119,6 +216,7 @@
                                         <button class="message__reply">Reply</button>
                                     </div>
                                 </div>`)
+
                 on_delete_message()
                 on_reply_message()
                 updateScroll()
@@ -128,7 +226,6 @@
                 console.log(message_for_delete)
                 console.log('Шоб удалить')
                 message_for_delete.remove()
-                updateScroll()
             }
             else if (data.type === 'send_message_reply'){
                 let messages = document.getElementById('messages')
@@ -165,19 +262,102 @@
             }
             else if (data.type === 'new_photo'){
                 let messages = document.getElementById('messages')
-                messages.insertAdjacentHTML('beforeend', `<div class='message' data-id="${data.id}" data-message="${data.photo}">
-                                    <img src="${data.picture_profile}" class="profile_pictures">
-                                    <div class='message__buttons'>
-                                        <p>від:${from_user}:</p>
-                                        <img src="${data.photo}" alt="none">
-                                        <input type="hidden" name="message_id" value="${data.id}">
-                                        <button class="message__delete">Delete</button>
-                                        <button class="message__reply">Reply</button>
-                                    </div>
-                                </div>`)
+                if (data.is_photo === 'no'){
+                    messages.insertAdjacentHTML('beforeend', `<div class='message' data-id="${data.id}" data-message="${data.photo}">
+                                        <img src="${data.picture_profile}" class="profile_pictures">
+                                        <div class='message__buttons'>
+                                            <p>від:${from_user}:</p>
+                                            <img src="${data.photo}" alt="none">
+                                            <input type="hidden" name="message_id" value="${data.id}">
+                                            <button class="message__delete">Delete</button>
+                                            <button class="message__reply">Reply</button>
+                                        </div>
+                                    </div>`)
+                }
+                else{
+                    messages.insertAdjacentHTML('beforeend', `<div class='message' data-id="${data.id}" data-message="${data.photo}">
+                                        <img src="${data.picture_profile}" class="profile_pictures">
+                                        <div class='message__buttons'>
+                                            <p>від:${from_user}:</p>
+                                            <div class="player paused" data-volumelevel="high">
+                                                <div class="thumbnail_img">
+
+                                                </div>
+                                                <div class="controls_div">
+                                                    <div class="timeline_div">
+                                                        <div class="timeline">
+                                                            <p class="preview-time">dasdasd</p>
+                                                            <div class="thumb_indicator"></div>
+                                                        </div>
+                                                    </div>
+                                                        <div class="controls">
+                                                        <div class="play-pause">
+                                                            <button class="play-pause_button">
+                                                                <svg class="play-icon" viewBox="0 0 24 24">
+                                                                    <path fill="currentColor" d="M8,5.14V19.14L19,12.14L8,5.14Z" />
+                                                                </svg>
+                                                                <svg class="pause-icon" viewBox="0 0 24 24">
+                                                                    <path fill="currentColor" d="M14,19H18V5H14M6,19H10V5H6V19Z" />
+                                                                </svg>
+                                                            </button>
+                                                        </div>
+                                                        <div class="volume_div">
+                                                            <button class="volume">
+                                                                <svg class="volume-high-icon" viewBox="0 0 24 24">
+                                                                <path fill="currentColor" d="M14,3.23V5.29C16.89,6.15 19,8.83 19,12C19,15.17 16.89,17.84 14,18.7V20.77C18,19.86 21,16.28 21,12C21,7.72 18,4.14 14,3.23M16.5,12C16.5,10.23 15.5,8.71 14,7.97V16C15.5,15.29 16.5,13.76 16.5,12M3,9V15H7L12,20V4L7,9H3Z" />
+                                                                </svg>
+                                                                <svg class="volume-low-icon" viewBox="0 0 24 24">
+                                                                <path fill="currentColor" d="M5,9V15H9L14,20V4L9,9M18.5,12C18.5,10.23 17.5,8.71 16,7.97V16C17.5,15.29 18.5,13.76 18.5,12Z" />
+                                                                </svg>
+                                                                <svg class="volume-muted-icon" viewBox="0 0 24 24">
+                                                                <path fill="currentColor" d="M12,4L9.91,6.09L12,8.18M4.27,3L3,4.27L7.73,9H3V15H7L12,20V13.27L16.25,17.53C15.58,18.04 14.83,18.46 14,18.7V20.77C15.38,20.45 16.63,19.82 17.68,18.96L19.73,21L21,19.73L12,10.73M19,12C19,12.94 18.8,13.82 18.46,14.64L19.97,16.15C20.62,14.91 21,13.5 21,12C21,7.72 18,4.14 14,3.23V5.29C16.89,6.15 19,8.83 19,12M16.5,12C16.5,10.23 15.5,8.71 14,7.97V10.18L16.45,12.63C16.5,12.43 16.5,12.21 16.5,12Z" />
+                                                                </svg>
+                                                            </button>
+                                                            <input class="volume_range" type="range" min="0" max="1" step="any" value="1">
+                                                        </div>
+                                                        <div class="duration_div">
+                                                            <div class="start_time">0:00</div>
+                                                            /
+                                                            <div class="end_time"></div>
+                                                        </div>
+                                                        <button class="speed wide-btn">
+                                                            1x
+                                                        </button>
+                                                        <button class="mini_player">
+                                                            <svg viewBox="0 0 24 24">
+                                                                <path fill="currentColor" d="M21 3H3c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H3V5h18v14zm-10-7h9v6h-9z"/>
+                                                            </svg>
+                                                        </button>
+                                                        <button class="full_screen">
+                                                            <svg class="open" viewBox="0 0 24 24">
+                                                                <path fill="currentColor" d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/>
+                                                            </svg>
+                                                            <svg class="close" viewBox="0 0 24 24">
+                                                                <path fill="currentColor" d="M5 16h3v3h2v-5H5v2zm3-8H5v2h5V5H8v3zm6 11h2v-3h3v-2h-5v5zm2-11V5h-2v5h5V8h-3z"/>
+                                                            </svg>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                                <video
+                                                    id="my-video"
+                                                    class="video-js"
+                                                    preload="auto"
+                                                    data-setup="{}"
+                                                >
+
+                                                    <source src="stream_video/${data.id}/" type="video/mp4"/>
+                                                </video>
+                                            </div>
+                                            <input type="hidden" name="message_id" value="${data.id}">
+                                            <button class="message__delete">Delete</button>
+                                            <button class="message__reply">Reply</button>
+                                        </div>
+                                    </div>`)
+                }
                 on_delete_message()
                 on_reply_message()
                 updateScroll()
+                video_player()
             }
             else if ( data.type === 'send_message_reply_picture'){
                 let messages = document.getElementById('messages')
@@ -223,6 +403,7 @@
                     'message': message,
                     'type': 'send_message'
                 }))
+                send_home(message)
                 form.reset()
             }
         })
@@ -236,19 +417,42 @@
                 reader.onload = function(event) {
                     console.log('bbbb')
                     let photoData = event.target.result;
+                    console.log(photoData)
                     chatSocket.send(JSON.stringify({
                         'photo': photoData,
                         'type': 'send_photo'
                     }));
+                    send_home('Фотографія')
                 }
                 photo_form.reset()
                 reader.readAsDataURL(file);
             }
         })
+        mySocket.onmessage = function(e){
+            let data = JSON.parse(e.data)
+            if (data.type === 'add_new_message_offline'){
+                if (Notification.permission !== 'granted') {
+                    console.log('нетттт')
+                    Notification.requestPermission().then(function(permission) {
+                        if (permission === 'granted') {
+                            // Разрешение получено, создаем уведомление
+                            new Notification(data.from_user, {
+                                body: data.message
+                            });
+                        }
+                    });
+                } else {
+                    // Разрешение уже есть, создаем уведомление
+                    new Notification(data.from_user, {
+                        body: data.message
+                    });
+                }
+            }
+        }
     </script>
     <script src="{% static 'chat/js/AjaxMessage.js' %}" defer></script>
     <script src="{% static 'chat/js/AjaxDelete.js' %}" defer></script>
     <script src="{% static 'chat/js/AjaxReply.js' %}" defer></script>
-
+    <script src="{% static 'chat/js/Video.js' %}" defer></script>
 </body>
 </html>
